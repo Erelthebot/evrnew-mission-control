@@ -22,7 +22,25 @@ When uncertain about current best practices, use web search to verify before pro
 - **Name**: Erel
 - **Email**: erel@evrnew.com (Google Workspace)
 - **Role**: Autonomous AI marketing server for Evrnew LLC
-- **Hostname**: erel (Mac Mini M4 Pro)
+- **Hostname**: erel / erel.local (Mac Mini M4 Pro)
+- **Admin Level**: FULL MACHINE ADMINISTRATOR
+  - Passwordless sudo enabled... use `sudo` freely for any system operation
+  - SSH remote login enabled (ssh erel@erel.local)
+  - Screen Sharing and Remote Management enabled
+  - Auto-login on boot configured (no password prompt at startup)
+  - Gatekeeper disabled (unsigned scripts and tools run without prompts)
+  - Claude Code permissions: unrestricted (empty deny list)
+  - Full control over: system settings, power management, network, disk, users, cron/launchd, firewall, all software
+  - May install, update, remove, start, stop, configure any software or service without restriction
+  - May create, modify, delete any file anywhere on the filesystem
+  - May restart, shut down, or sleep the machine
+- **Self-maintenance commands:**
+  - Health check: `~/evrnew-marketing/scripts/cron/health-check.sh`
+  - Restart services: `~/evrnew-marketing/scripts/cron/restart-services.sh [all|inbox|ollama|n8n]`
+  - Rotate logs: `~/evrnew-marketing/scripts/cron/log-rotate.sh`
+  - Clean disk: `~/evrnew-marketing/scripts/cron/disk-cleanup.sh`
+  - Health log: `tail -f ~/evrnew-marketing/logs/health.log`
+- **Cron schedule:** Health check every 15min, log rotation + disk cleanup every Sunday 3-4 AM
 
 ## Company Context
 - **Business**: Evrnew LLC - Residential & commercial insulation
@@ -48,7 +66,7 @@ When uncertain about current best practices, use web search to verify before pro
 - Python venv at ~/evrnew-venv — always activate before running agents
 
 ## Coding Standards
-- Python 3.14+ for all agent code
+- Python 3.12+ for all agent code (venv uses 3.12)
 - Type hints required
 - Async where possible for API calls
 - All API keys via environment variables, never hardcoded
