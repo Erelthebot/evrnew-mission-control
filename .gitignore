@@ -1,0 +1,21 @@
+# Environment & secrets
+.env
+*.env
+.envrc
+config/gmail/
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+
+# Data (large files)
+data/competitors/*.json
+data/seo-audits/*.json
+data/performance/*.json
+
+# macOS
+.DS_Store
