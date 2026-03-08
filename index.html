@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erel — Evrnew AI Marketing System</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --border: #2a2a2a;
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --text: #e8e8e8;
+      --muted: #888;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --red: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 32px 40px 24px;
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      color: var(--accent);
+    }
+    .logo span { color: var(--accent2); }
+    .tagline {
+      color: var(--muted);
+      font-size: 12px;
+      padding-bottom: 3px;
+    }
+    .status-pill {
+      margin-left: auto;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: 11px;
+      letter-spacing: 1px;
+    }
+    .status-pill::before { content: "● "; }
+
+    main { max-width: 980px; margin: 0 auto; padding: 48px 40px; }
+
+    h2 {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 {
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    p, li { color: var(--muted); font-size: 13px; }
+    ul { list-style: none; padding: 0; }
+    ul li::before { content: "→ "; color: var(--accent); }
+
+    section { margin-bottom: 56px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card h3 { font-size: 13px; margin-bottom: 8px; }
+    .card p, .card li { font-size: 12px; color: var(--muted); }
+
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .badge-blue { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.25); }
+    .badge-purple { background: rgba(124,58,237,0.15); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); }
+    .badge-green { background: rgba(34,197,94,0.1); color: var(--green); border: 1px solid rgba(34,197,94,0.25); }
+    .badge-yellow { background: rgba(250,204,21,0.1); color: var(--yellow); border: 1px solid rgba(250,204,21,0.25); }
+    .badge-red { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+
+    .check { color: var(--green); }
+    .warn  { color: var(--yellow); }
+
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 10px 12px;
+      font-size: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    code {
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 11px;
+      color: var(--accent);
+    }
+
+    .stack-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: var(--muted);
+      font-size: 11px;
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent); }
+
+    @media (max-width: 700px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      header { flex-wrap: wrap; }
+      main { padding: 32px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EREL<span>.AI</span></div>
+  <div class="tagline">Evrnew LLC — Autonomous AI Marketing Server</div>
+  <div class="status-pill">LIVE</div>
+</header>
+
+<main>
+
+  <!-- IDENTITY -->
+  <section>
+    <h2>Server Identity</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Hardware</h3>
+        <ul>
+          <li>Mac Mini M4 Pro</li>
+          <li>macOS Sequoia 15 (Darwin 25.3)</li>
+          <li>Host: <code>erel.local</code></li>
+          <li>926 GB storage — 11 GB used</li>
+          <li>Auto-login, auto-restart on power loss</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Identity &amp; Access</h3>
+        <ul>
+          <li>Email: <code>erel@evrnew.com</code> (Google Workspace)</li>
+          <li>Passwordless sudo enabled</li>
+          <li>SSH enabled (<code>ssh erel@erel.local</code>)</li>
+          <li>Claude Code: unrestricted (empty deny list)</li>
+          <li>Full machine administrator</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPANY -->
+  <section>
+    <h2>Company Context</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Business</h3>
+        <p>Evrnew LLC — Residential &amp; commercial insulation contractor serving the greater Pacific Northwest.</p>
+      </div>
+      <div class="card">
+        <h3>Service Area</h3>
+        <ul>
+          <li>King County</li>
+          <li>Snohomish County</li>
+          <li>Skagit County</li>
+          <li>Seattle · Bellevue · Everett</li>
+          <li>Marysville · Arlington · Bellingham</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Services</h3>
+        <ul>
+          <li>Spray foam insulation</li>
+          <li>Blown-in insulation</li>
+          <li>Batt insulation</li>
+          <li>Crawl space encapsulation</li>
+          <li>Attic insulation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section>
+    <h2>System Architecture</h2>
+    <div class="card" style="margin-bottom:16px;">
+      <h3>Overview</h3>
+      <p style="margin-bottom:12px;">CrewAI orchestrates 8 specialized marketing agents running 24/7 on this server. Each agent is assigned a specific domain, LLM model, and toolset. The agents communicate findings, trigger campaigns in GoHighLevel, and route all intelligence through a shared inbox and data pipeline.</p>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Core Framework</h3>
+        <ul>
+          <li>CrewAI 1.10.0 — agent orchestration</li>
+          <li>Python 3.12 venv at <code>~/evrnew-venv</code></li>
+          <li>n8n 2.10.2 — workflow automation</li>
+          <li>Ollama (llama3.2:3b) — local inference</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>AI Models</h3>
+        <ul>
+          <li>Claude Sonnet/Opus — content &amp; strategy</li>
+          <li>Grok Fast (xAI) — monitoring &amp; high-volume</li>
+          <li>Ollama llama3.2:3b — local fallback</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- AGENTS -->
+  <section>
+    <h2>The 8 Agents</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Role</th>
+          <th>Model</th>
+          <th>Key Tools</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-purple">competitive_intelligence</span></td>
+          <td>Monitor competitors, Google Alerts, reviews</td>
+          <td><code>Grok Fast</code></td>
+          <td>BrowserBase, Playwright, web scraping</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">strategy</span></td>
+          <td>Campaign planning, market analysis, decisions</td>
+          <td><code>Claude Opus</code></td>
+          <td>Memory MCP, sequential-thinking MCP</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">google_meta_ads</span></td>
+          <td>Google Ads + Meta Ads management &amp; optimization</td>
+          <td><code>Claude Sonnet</code></td>
+          <td>Google Ads API, Meta API, GHL</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">blog_seo_content</span></td>
+          <td>Blog posts, landing pages, E-E-A-T content</td>
+          <td><code>Claude Sonnet</code></td>
+          <td>DataForSEO, Search Console, fetch MCP</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-yellow">social_media</span></td>
+          <td>Social posts, scheduling, engagement</td>
+          <td><code>Grok Fast</code></td>
+          <td>Buffer API, BrowserBase</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">technical_seo</span></td>
+          <td>Site audits, Core Web Vitals, schema markup</td>
+          <td><code>Grok Fast</code></td>
+          <td>DataForSEO, Search Console alerts</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">email_drip</span></td>
+          <td>GHL drip campaigns, lead nurturing sequences</td>
+          <td><code>Claude Sonnet</code></td>
+          <td>GHL API, SendGrid, Gmail API</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">landing_page_content</span></td>
+          <td>CRO-optimized landing page copy</td>
+          <td><code>Claude Sonnet</code></td>
+          <td>BrowserBase, GHL, SpyFu</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- TELEGRAM BOT -->
+  <section>
+    <h2>Telegram Bot — Evrnew Agent</h2>
+    <div class="grid-2">
+      <div class="card">
+        <span class="badge badge-green">token active</span>
+        <h3>Bot: @evrnew_agent_bot</h3>
+        <p style="margin-bottom:10px;">python-telegram-bot v22 with polling + optional webhook mode via aiohttp.</p>
+        <ul>
+          <li><code>/status</code> — Moltbook heartbeat + site status</li>
+          <li><code>/brief</code> — Today's marketing brief</li>
+          <li><code>/deploy</code> — Deploy via Netlify CLI</li>
+          <li><code>/agents</code> — List active agents</li>
+          <li>Free-text → routed to Claude API</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Files</h3>
+        <ul>
+          <li><code>agents/telegram-bot/bot.py</code> — main bot (polling)</li>
+          <li><code>agents/telegram-bot/webhook.py</code> — aiohttp webhook server</li>
+          <li><code>agents/telegram-bot/setup_bot.py</code> — auto-create via BotFather</li>
+        </ul>
+        <br/>
+        <h3>Token</h3>
+        <p>Stored at <code>~/.config/evrnew/telegram_bot_token</code> or <code>TELEGRAM_BOT_TOKEN</code> env var. Created via <code>@BotFather /newbot</code>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOLTBOOK -->
+  <section>
+    <h2>Moltbook Agent — erel_evrnew</h2>
+    <div class="grid-2">
+      <div class="card">
+        <span class="badge badge-yellow">claim pending</span>
+        <h3>Agent: erel_evrnew</h3>
+        <p style="margin-bottom:10px;">Moltbook is a decentralized AI agent social network. The <code>erel_evrnew</code> agent runs a heartbeat every 30 minutes to maintain presence.</p>
+        <ul>
+          <li>Profile: <code>moltbook.com/u/erel_evrnew</code></li>
+          <li>Heartbeat: <code>scripts/moltbook_heartbeat.py</code></li>
+          <li>LaunchAgent: <code>com.evrnew.moltbook-heartbeat</code></li>
+          <li>Credentials: <code>~/.config/moltbook/credentials.json</code></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Claim Required</h3>
+        <p style="margin-bottom:10px;">To claim the agent, the owner must tweet the verification code.</p>
+        <ul>
+          <li>Claim URL: <code>moltbook.com/claim/...</code></li>
+          <li>Tweet: <em>"I'm claiming my AI agent 'erel_evrnew' on @moltbook 🦞 Verification: swim-8NS3"</em></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EMAIL ROUTING -->
+  <section>
+    <h2>Email Inbox Routing</h2>
+    <div class="card">
+      <h3>Gmail API Daemon — <code>erel_inbox_monitor.py</code></h3>
+      <p style="margin-bottom:12px;">Runs 24/7 via LaunchAgent (<code>com.evrnew.erel-inbox</code>). Polls <code>erel@evrnew.com</code> every 5 minutes via Gmail API (OAuth2). Routes emails to agent-specific inboxes as JSON files.</p>
+      <table>
+        <thead><tr><th>Rule</th><th>Match</th><th>Routes To</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr><td>Google Alerts</td><td>googlealerts-noreply@google.com</td><td><code>competitive_intelligence</code></td><td>Normal</td></tr>
+          <tr><td>GHL Notifications</td><td>notifications@gohighlevel.com</td><td><code>email_drip</code></td><td>High</td></tr>
+          <tr><td>Review Alerts</td><td>noreply@google.com + "review"</td><td><code>competitive_intelligence</code></td><td>High</td></tr>
+          <tr><td>Competitor News</td><td>Subject: insulation / energy</td><td><code>competitive_intelligence</code></td><td>Low</td></tr>
+          <tr><td>SEO Reports</td><td>dataforseo.com / searchconsole</td><td><code>technical_seo</code></td><td>Normal</td></tr>
+          <tr><td>Ad Alerts</td><td>ads-noreply@google.com / facebookmail</td><td><code>ads_agent</code></td><td>High</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- MCP SERVERS -->
+  <section>
+    <h2>MCP Servers</h2>
+    <div class="grid-3">
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>filesystem</h3>
+        <p>Read/write access to <code>~/evrnew-marketing/</code></p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>memory</h3>
+        <p>Persistent key-value memory across sessions</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>fetch</h3>
+        <p>HTTP fetch for web content retrieval</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>sequential-thinking</h3>
+        <p>Multi-step reasoning chains for strategy agent</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>sqlite</h3>
+        <p>Marketing analytics DB at <code>data/marketing.db</code></p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>github</h3>
+        <p>Repo management — awaiting <code>GITHUB_TOKEN</code></p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>google-maps</h3>
+        <p>Local business data — awaiting API key</p>
+      </div>
+      <div class="card">
+        <span class="badge badge-green">active</span>
+        <h3>browserbase</h3>
+        <p>Cloud Chrome sessions — awaiting API key + install from GitHub</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTEGRATIONS -->
+  <section>
+    <h2>Integrations &amp; API Status</h2>
+    <table>
+      <thead><tr><th>Integration</th><th>Purpose</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Anthropic Claude API</td><td>Content, strategy, copy generation</td><td><span class="check">✓ Active</span></td></tr>
+        <tr><td>Gmail API (OAuth2)</td><td>Inbox monitoring, email send for erel@evrnew.com</td><td><span class="check">✓ Active</span></td></tr>
+        <tr><td>Ollama (local)</td><td>Local llama3.2:3b inference</td><td><span class="check">✓ Running</span></td></tr>
+        <tr><td>xAI Grok API</td><td>Fast/cheap monitoring tasks</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>GoHighLevel CRM</td><td>Lead management, campaigns, automation</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>DataForSEO</td><td>SERP data, keyword research</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>Google Ads API</td><td>Ad performance, bid management</td><td><span class="warn">⚠ Key needed</span></td></tr>
+        <tr><td>SpyFu</td><td>Competitor keyword/ad intelligence</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>SendGrid</td><td>Transactional email delivery</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>Buffer</td><td>Social media scheduling</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>BrowserBase</td><td>Cloud Chrome, authenticated scraping</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>Google Maps API</td><td>Local SEO, competitor mapping</td><td><span class="ok">✓ Active</span></td></tr>
+        <tr><td>Netlify CLI</td><td>Site deployment (openclaw-evrnew.netlify.app)</td><td><span class="check">✓ Active</span></td></tr>
+        <tr><td>Moltbook API</td><td>AI agent social network, agent heartbeat</td><td><span class="check">✓ Active</span></td></tr>
+        <tr><td>Telegram Bot API</td><td>Command &amp; control via @evrnew_agent_bot</td><td><span class="ok">✓ Token active</span></td></tr>
+        <tr><td>Google Voice</td><td>Phone number: +1 (206) 453-0208</td><td><span class="check">✓ Active</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- INFRASTRUCTURE -->
+  <section>
+    <h2>Infrastructure &amp; Maintenance</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>System Services</h3>
+        <ul>
+          <li>Firewall: enabled</li>
+          <li>Sleep: disabled (<code>SleepDisabled=1</code>)</li>
+          <li>Auto-restart on power loss: on</li>
+          <li>Wake on LAN: on</li>
+          <li>Auto-login as <code>erel</code></li>
+          <li>Auto-updates: disabled</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Cron Schedule</h3>
+        <ul>
+          <li>Every 15 min: health check</li>
+          <li>Sunday 3am: log rotation</li>
+          <li>Sunday 4am: disk cleanup</li>
+        </ul>
+        <br/>
+        <h3>Log Files</h3>
+        <ul>
+          <li><code>logs/erel-inbox.log</code></li>
+          <li><code>logs/health.log</code></li>
+          <li><code>logs/erel-inbox-stderr.log</code></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILE STRUCTURE -->
+  <section>
+    <h2>Project Structure</h2>
+    <div class="card">
+      <pre style="font-size:11px;color:var(--muted);line-height:1.9;">~/evrnew-marketing/
+├── agents/
+│   ├── email-inbox/
+│   │   ├── erel_inbox_monitor.py   <span style="color:var(--accent)">← 24/7 Gmail daemon</span>
+│   │   ├── gmail_auth.py           <span style="color:var(--accent)">← one-time OAuth setup</span>
+│   │   └── erel_send.py            <span style="color:var(--accent)">← quick send utility</span>
+│   └── telegram-bot/
+│       ├── bot.py                  <span style="color:var(--accent)">← Telegram bot (PTB polling)</span>
+│       ├── webhook.py              <span style="color:var(--accent)">← aiohttp webhook server</span>
+│       └── setup_bot.py            <span style="color:var(--accent)">← BotFather automation</span>
+├── config/
+│   ├── agents.yaml                 <span style="color:var(--accent)">← all 8 agent definitions</span>
+│   ├── gmail/
+│   │   ├── credentials.json        <span style="color:var(--accent)">← OAuth client</span>
+│   │   └── token.json              <span style="color:var(--accent)">← active OAuth token</span>
+│   ├── mcp/
+│   │   └── claude-mcp-config.json  <span style="color:var(--accent)">← MCP server config</span>
+│   └── prompts/
+│       └── base_system_prompt.txt  <span style="color:var(--accent)">← shared agent prompt</span>
+├── data/
+│   ├── inbox/                      <span style="color:var(--accent)">← routed email JSON files</span>
+│   └── marketing.db                <span style="color:var(--accent)">← SQLite analytics</span>
+├── logs/
+├── scripts/
+│   ├── moltbook_heartbeat.py       <span style="color:var(--accent)">← Moltbook 30min heartbeat</span>
+│   └── cron/
+│       ├── health-check.sh
+│       ├── log-rotate.sh
+│       ├── disk-cleanup.sh
+│       └── restart-services.sh
+├── sites/
+│   └── openclaw-site/              <span style="color:var(--accent)">← this site</span>
+└── CLAUDE.md                       <span style="color:var(--accent)">← Claude Code session context</span></pre>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section>
+    <h2>Full Tech Stack</h2>
+    <div class="card">
+      <div class="stack-row">
+        <span class="badge badge-blue">Python 3.12</span>
+        <span class="badge badge-blue">CrewAI 1.10.0</span>
+        <span class="badge badge-blue">Anthropic SDK 0.84.0</span>
+        <span class="badge badge-blue">OpenAI SDK 2.24.0</span>
+        <span class="badge badge-blue">Playwright 1.58.0</span>
+        <span class="badge badge-blue">google-auth-oauthlib</span>
+        <span class="badge badge-blue">googleapiclient</span>
+        <span class="badge badge-blue">langchain-anthropic 1.3.4</span>
+        <span class="badge badge-purple">n8n 2.10.2</span>
+        <span class="badge badge-purple">Node.js 25.7.0</span>
+        <span class="badge badge-purple">npm / npx</span>
+        <span class="badge badge-green">Ollama</span>
+        <span class="badge badge-green">llama3.2:3b</span>
+        <span class="badge badge-green">ChromaDB 1.1.1</span>
+        <span class="badge badge-green">pandas 3.0.1</span>
+        <span class="badge badge-yellow">BrowserBase SDK 1.5.0</span>
+        <span class="badge badge-yellow">Google Chrome + BrowserBase ext.</span>
+        <span class="badge badge-red">macOS LaunchAgents</span>
+        <span class="badge badge-red">launchd / cron</span>
+        <span class="badge badge-red">Homebrew 5.0.16</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>EREL.AI</span> — Evrnew LLC Autonomous Marketing Server &nbsp;|&nbsp; Last updated: March 2026
+</footer>
+
+</body>
+</html>

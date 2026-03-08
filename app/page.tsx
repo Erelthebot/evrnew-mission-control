@@ -1,15 +1,17 @@
 // Overview — System Overview screen.
 // Preserves and modernizes the original EREL.AI dashboard content.
 
-import { integrations, mcpServers, systemAgents, systemServices } from '@/lib/data'
+import { mcpServers, systemAgents, systemServices } from '@/lib/data'
+import IntegrationsTable from '@/app/components/IntegrationsTable'
+import CollapsibleSection from '@/app/components/CollapsibleSection'
 
 const badge = (color: string, text: string) => {
   const colors: Record<string, string> = {
-    blue: 'bg-[#00e5ff]/10 text-[#00e5ff] border-[#00e5ff]/25',
-    purple: 'bg-[#7c3aed]/15 text-[#a78bfa] border-[#7c3aed]/30',
-    green: 'bg-[#22c55e]/10 text-[#22c55e] border-[#22c55e]/25',
-    yellow: 'bg-[#facc15]/10 text-[#facc15] border-[#facc15]/25',
-    red: 'bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/25',
+    blue: 'bg-sky-50 text-sky-600 border-sky-400',
+    purple: 'bg-violet-50 text-violet-600 border-violet-400',
+    green: 'bg-emerald-50 text-emerald-600 border-emerald-400',
+    yellow: 'bg-amber-50 text-amber-500 border-amber-400',
+    red: 'bg-red-50 text-red-600 border-[#ff2d55]/25',
   }
   return (
     <span className={`inline-block text-[10px] px-2 py-0.5 rounded border font-medium tracking-wide ${colors[color] ?? colors.blue}`}>
@@ -24,180 +26,158 @@ export default function OverviewPage() {
 
       {/* Page title */}
       <div>
-        <h1 className="text-[11px] tracking-[3px] uppercase text-[#00e5ff] mb-1">System Overview</h1>
-        <p className="text-[#444] text-xs">EREL.AI — Evrnew LLC Autonomous AI Marketing &amp; Operations Server</p>
+        <h1 className="text-[11px] tracking-[3px] uppercase text-sky-600 mb-1">System Overview</h1>
+        <p className="text-slate-500 text-xs">EREL.AI — Evrnew LLC Autonomous AI Marketing &amp; Operations Server</p>
       </div>
 
-      {/* Server Identity */}
-      <section>
-        <SectionTitle>Server Identity</SectionTitle>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Card>
-            <CardTitle>Hardware</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
-              {['Mac Mini M4 Pro', 'macOS Sequoia 15 (Darwin 25.3)', 'Host: erel.local', '926 GB storage — 11 GB used', 'Auto-login, auto-restart on power loss'].map(s => (
-                <li key={s} className="before:content-['→_'] before:text-[#00e5ff]">{s}</li>
-              ))}
-            </ul>
-          </Card>
-          <Card>
-            <CardTitle>Identity &amp; Access</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Email: <Code>erel@evrnew.com</Code> (Google Workspace)</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Passwordless sudo enabled</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">SSH: <Code>ssh erel@erel.local</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Claude Code: unrestricted (empty deny list)</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Full machine administrator</li>
-            </ul>
-          </Card>
-        </div>
-      </section>
-
       {/* Company Context */}
-      <section>
-        <SectionTitle>Company Context</SectionTitle>
+      <CollapsibleSection title="Company Context">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <Card>
             <CardTitle>Business</CardTitle>
-            <p className="text-[#666] text-xs">Evrnew LLC — Residential &amp; commercial insulation contractor serving the greater Pacific Northwest.</p>
+            <p className="text-slate-500 text-xs">Evrnew LLC — Residential &amp; commercial insulation contractor serving the greater Pacific Northwest.</p>
           </Card>
           <Card>
             <CardTitle>Service Area</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
+            <ul className="space-y-1 text-slate-500 text-xs">
               {['King County', 'Snohomish County', 'Skagit County', 'Seattle · Bellevue · Everett', 'Marysville · Arlington · Bellingham'].map(s => (
-                <li key={s} className="before:content-['→_'] before:text-[#00e5ff]">{s}</li>
+                <li key={s} className="before:content-['→_'] before:text-sky-600">{s}</li>
               ))}
             </ul>
           </Card>
           <Card>
             <CardTitle>Services</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
+            <ul className="space-y-1 text-slate-500 text-xs">
               {['Spray foam insulation', 'Blown-in insulation', 'Batt insulation', 'Crawl space encapsulation', 'Attic insulation'].map(s => (
-                <li key={s} className="before:content-['→_'] before:text-[#00e5ff]">{s}</li>
+                <li key={s} className="before:content-['→_'] before:text-sky-600">{s}</li>
               ))}
             </ul>
           </Card>
         </div>
-      </section>
+      </CollapsibleSection>
 
       {/* System Architecture */}
-      <section>
-        <SectionTitle>System Architecture</SectionTitle>
+      <CollapsibleSection title="System Architecture">
         <Card className="mb-3">
           <CardTitle>Overview</CardTitle>
-          <p className="text-[#666] text-xs leading-relaxed">
+          <p className="text-slate-500 text-xs leading-relaxed">
             CrewAI orchestrates 8 specialized marketing agents running 24/7 on this server. Each agent is assigned a specific domain, LLM model, and toolset. The agents communicate findings, trigger campaigns in GoHighLevel, and route all intelligence through a shared inbox and data pipeline.
           </p>
         </Card>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Card>
             <CardTitle>Core Framework</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]">CrewAI 1.10.0 — agent orchestration</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Python 3.12 venv at <Code>~/evrnew-venv</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">n8n 2.10.2 — workflow automation</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Ollama (llama3.2:3b) — local inference</li>
+            <ul className="space-y-1 text-slate-500 text-xs">
+              <li className="before:content-['→_'] before:text-sky-600">CrewAI 1.10.0 — agent orchestration</li>
+              <li className="before:content-['→_'] before:text-sky-600">Python 3.12 venv at <Code>~/evrnew-venv</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">n8n 2.10.2 — workflow automation</li>
+              <li className="before:content-['→_'] before:text-sky-600">Ollama (llama3.2:3b) — local inference</li>
             </ul>
           </Card>
           <Card>
             <CardTitle>AI Models</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Claude Sonnet/Opus — content &amp; strategy</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Grok Fast (xAI) — monitoring &amp; high-volume</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Ollama llama3.2:3b — local fallback</li>
+            <ul className="space-y-1 text-slate-500 text-xs">
+              <li className="before:content-['→_'] before:text-sky-600">Claude Sonnet/Opus — content &amp; strategy</li>
+              <li className="before:content-['→_'] before:text-sky-600">Grok Fast (xAI) — monitoring &amp; high-volume</li>
+              <li className="before:content-['→_'] before:text-sky-600">Ollama llama3.2:3b — local fallback</li>
             </ul>
           </Card>
         </div>
-      </section>
+      </CollapsibleSection>
+
+      {/* Integrations */}
+      <CollapsibleSection title="Integrations & API Status">
+        <Card>
+          <IntegrationsTable />
+        </Card>
+      </CollapsibleSection>
 
       {/* The 8 Agents */}
-      <section>
-        <SectionTitle>The 8 System Agents</SectionTitle>
+      <CollapsibleSection title="The 8 System Agents">
         <Card className="overflow-x-auto">
           <table className="w-full text-xs border-collapse">
             <thead>
               <tr>
-                {['Agent', 'Role', 'Model', 'Key Tools'].map(h => (
-                  <th key={h} className="text-left text-[10px] tracking-widest uppercase text-[#444] pb-3 pr-4 border-b border-[#2a2a2a]">{h}</th>
+                {['Agent', 'Schedule', 'LLM', 'Key Tools'].map(h => (
+                  <th key={h} className="text-left text-[10px] tracking-widest uppercase text-slate-500 pb-3 pr-4 border-b border-slate-200">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {systemAgents.map((a) => (
                 <tr key={a.id} className="border-b border-[#ffffff04] last:border-0">
-                  <td className="py-2.5 pr-4">{badge(a.badge, a.name)}</td>
-                  <td className="py-2.5 pr-4 text-[#666]">{a.role}</td>
-                  <td className="py-2.5 pr-4"><Code>{a.model}</Code></td>
-                  <td className="py-2.5 text-[#555]">{a.tools}</td>
+                  <td className="py-2.5 pr-4">
+                    <span className="inline-block text-[10px] px-2 py-0.5 rounded border font-medium tracking-wide bg-emerald-50 text-emerald-600 border-emerald-400">{a.role.replace(' Agent', '')}</span>
+                  </td>
+                  <td className="py-2.5 pr-4 text-slate-500">{a.schedule}</td>
+                  <td className="py-2.5 pr-4"><Code>{a.llm}</Code></td>
+                  <td className="py-2.5 text-slate-400">{a.tools.join(', ')}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </Card>
-      </section>
+      </CollapsibleSection>
 
       {/* Telegram Bot */}
-      <section>
-        <SectionTitle>Telegram Bot — @evrnew_agent_bot</SectionTitle>
+      <CollapsibleSection title="Telegram Bot — @evrnew_agent_bot">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Card>
             <div className="mb-2">{badge('green', 'token active')}</div>
             <CardTitle>Bot: @evrnew_agent_bot</CardTitle>
-            <p className="text-[#666] text-xs mb-3">python-telegram-bot v22 with polling + optional webhook mode via aiohttp.</p>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>/status</Code> — Moltbook heartbeat + site status</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>/brief</Code> — Today&apos;s marketing brief</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>/deploy</Code> — Deploy via Netlify CLI</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>/agents</Code> — List active agents</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Free-text → routed to Claude API</li>
+            <p className="text-slate-500 text-xs mb-3">python-telegram-bot v22 with polling + optional webhook mode via aiohttp.</p>
+            <ul className="space-y-1 text-slate-500 text-xs">
+              <li className="before:content-['→_'] before:text-sky-600"><Code>/status</Code> — Moltbook heartbeat + site status</li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>/brief</Code> — Today&apos;s marketing brief</li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>/deploy</Code> — Deploy via Netlify CLI</li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>/agents</Code> — List active agents</li>
+              <li className="before:content-['→_'] before:text-sky-600">Free-text → routed to Claude API</li>
             </ul>
           </Card>
           <Card>
             <CardTitle>Files</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs mb-4">
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>agents/telegram-bot/bot.py</Code> — main bot</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>agents/telegram-bot/webhook.py</Code> — aiohttp server</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>agents/telegram-bot/setup_bot.py</Code> — BotFather auto</li>
+            <ul className="space-y-1 text-slate-500 text-xs mb-4">
+              <li className="before:content-['→_'] before:text-sky-600"><Code>agents/telegram-bot/bot.py</Code> — main bot</li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>agents/telegram-bot/webhook.py</Code> — aiohttp server</li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>agents/telegram-bot/setup_bot.py</Code> — BotFather auto</li>
             </ul>
             <CardTitle>Token</CardTitle>
-            <p className="text-[#555] text-xs">Stored at <Code>~/.config/evrnew/telegram_bot_token</Code> or <Code>TELEGRAM_BOT_TOKEN</Code> env var.</p>
+            <p className="text-slate-400 text-xs">Stored at <Code>~/.config/evrnew/telegram_bot_token</Code> or <Code>TELEGRAM_BOT_TOKEN</Code> env var.</p>
           </Card>
         </div>
-      </section>
+      </CollapsibleSection>
 
       {/* Moltbook */}
-      <section>
-        <SectionTitle>Moltbook Agent — erel_evrnew</SectionTitle>
+      <CollapsibleSection title="Moltbook Agent — erel_evrnew">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Card>
             <div className="mb-2">{badge('yellow', 'claim pending')}</div>
             <CardTitle>Agent: erel_evrnew</CardTitle>
-            <p className="text-[#666] text-xs mb-3">Decentralized AI agent social network. Heartbeat runs every 30 minutes.</p>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Profile: <Code>moltbook.com/u/erel_evrnew</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Heartbeat: <Code>scripts/moltbook_heartbeat.py</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">LaunchAgent: <Code>com.evrnew.moltbook-heartbeat</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Credentials: <Code>~/.config/moltbook/credentials.json</Code></li>
+            <p className="text-slate-500 text-xs mb-3">Decentralized AI agent social network. Heartbeat runs every 30 minutes.</p>
+            <ul className="space-y-1 text-slate-500 text-xs">
+              <li className="before:content-['→_'] before:text-sky-600">Profile: <Code>moltbook.com/u/erel_evrnew</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">Heartbeat: <Code>scripts/moltbook_heartbeat.py</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">LaunchAgent: <Code>com.evrnew.moltbook-heartbeat</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">Credentials: <Code>~/.config/moltbook/credentials.json</Code></li>
             </ul>
           </Card>
           <Card>
             <CardTitle>Claim Required</CardTitle>
-            <p className="text-[#666] text-xs mb-3">Tweet verification code to claim the agent:</p>
-            <p className="text-[#555] text-xs italic leading-relaxed">&quot;I&apos;m claiming my AI agent &apos;erel_evrnew&apos; on @moltbook Verification: swim-8NS3&quot;</p>
+            <p className="text-slate-500 text-xs mb-3">Tweet verification code to claim the agent:</p>
+            <p className="text-slate-400 text-xs italic leading-relaxed">&quot;I&apos;m claiming my AI agent &apos;erel_evrnew&apos; on @moltbook Verification: swim-8NS3&quot;</p>
           </Card>
         </div>
-      </section>
+      </CollapsibleSection>
 
       {/* Email Routing */}
-      <section>
-        <SectionTitle>Email Inbox Routing</SectionTitle>
+      <CollapsibleSection title="Email Inbox Routing">
         <Card className="overflow-x-auto">
-          <p className="text-[#666] text-xs mb-4">Gmail API daemon (<Code>erel_inbox_monitor.py</Code>) runs 24/7. Polls <Code>erel@evrnew.com</Code> every 5 minutes. Routes emails to agent inboxes as JSON.</p>
+          <p className="text-slate-500 text-xs mb-4">Gmail API daemon (<Code>erel_inbox_monitor.py</Code>) runs 24/7. Polls <Code>erel@evrnew.com</Code> every 5 minutes. Routes emails to agent inboxes as JSON.</p>
           <table className="w-full text-xs border-collapse">
             <thead>
               <tr>
                 {['Rule', 'Match', 'Routes To', 'Priority'].map(h => (
-                  <th key={h} className="text-left text-[10px] tracking-widest uppercase text-[#444] pb-3 pr-4 border-b border-[#2a2a2a]">{h}</th>
+                  <th key={h} className="text-left text-[10px] tracking-widest uppercase text-slate-500 pb-3 pr-4 border-b border-slate-200">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -211,124 +191,92 @@ export default function OverviewPage() {
                 ['Ad Alerts', 'ads-noreply@google.com / facebookmail', 'ads_agent', 'High'],
               ].map(([rule, match, to, priority]) => (
                 <tr key={rule} className="border-b border-[#ffffff04] last:border-0">
-                  <td className="py-2.5 pr-4 text-[#888]">{rule}</td>
+                  <td className="py-2.5 pr-4 text-slate-600">{rule}</td>
                   <td className="py-2.5 pr-4"><Code>{match}</Code></td>
                   <td className="py-2.5 pr-4">{badge('blue', to as string)}</td>
-                  <td className="py-2.5 text-[#555]">{priority}</td>
+                  <td className="py-2.5 text-slate-400">{priority}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </Card>
-      </section>
+      </CollapsibleSection>
 
       {/* MCP Servers */}
-      <section>
-        <SectionTitle>MCP Servers</SectionTitle>
+      <CollapsibleSection title="MCP Servers">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {mcpServers.map((mcp) => (
             <Card key={mcp.name}>
               <div className="mb-2">{badge('green', 'active')}</div>
               <CardTitle>{mcp.name}</CardTitle>
-              <p className="text-[#555] text-xs">{mcp.description}</p>
+              <p className="text-slate-400 text-xs">{mcp.description}</p>
             </Card>
           ))}
         </div>
-      </section>
+      </CollapsibleSection>
 
-      {/* Integrations */}
-      <section>
-        <SectionTitle>Integrations &amp; API Status</SectionTitle>
-        <Card className="overflow-x-auto">
-          <table className="w-full text-xs border-collapse">
-            <thead>
-              <tr>
-                {['Integration', 'Purpose', 'Status'].map(h => (
-                  <th key={h} className="text-left text-[10px] tracking-widest uppercase text-[#444] pb-3 pr-4 border-b border-[#2a2a2a]">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {integrations.map((i) => (
-                <tr key={i.name} className="border-b border-[#ffffff04] last:border-0">
-                  <td className="py-2.5 pr-4 text-[#aaa]">{i.name}</td>
-                  <td className="py-2.5 pr-4 text-[#555]">{i.purpose}</td>
-                  <td className="py-2.5">
-                    <span className={`text-xs font-medium ${i.status === 'active' ? 'text-[#22c55e]' : i.status === 'pending' ? 'text-[#facc15]' : 'text-[#ef4444]'}`}>
-                      {i.status === 'active' ? '✓ Active' : i.status === 'pending' ? `⚠ ${i.note ?? 'Pending'}` : '✗ Error'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
-      </section>
 
       {/* Infrastructure */}
-      <section>
-        <SectionTitle>Infrastructure &amp; Maintenance</SectionTitle>
+      <CollapsibleSection title="Infrastructure & Maintenance">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Card>
             <CardTitle>System Services</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Firewall: enabled</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Sleep: disabled (SleepDisabled=1)</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Auto-restart on power loss: on</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Wake on LAN: on</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Auto-login as <Code>erel</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Auto-updates: disabled</li>
+            <ul className="space-y-1 text-slate-500 text-xs">
+              <li className="before:content-['→_'] before:text-sky-600">Firewall: enabled</li>
+              <li className="before:content-['→_'] before:text-sky-600">Sleep: disabled (SleepDisabled=1)</li>
+              <li className="before:content-['→_'] before:text-sky-600">Auto-restart on power loss: on</li>
+              <li className="before:content-['→_'] before:text-sky-600">Wake on LAN: on</li>
+              <li className="before:content-['→_'] before:text-sky-600">Auto-login as <Code>erel</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">Auto-updates: disabled</li>
             </ul>
           </Card>
           <Card>
             <CardTitle>Cron Schedule</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs mb-4">
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Every 15 min: health check</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Sunday 3am: log rotation</li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]">Sunday 4am: disk cleanup</li>
+            <ul className="space-y-1 text-slate-500 text-xs mb-4">
+              <li className="before:content-['→_'] before:text-sky-600">Every 15 min: health check</li>
+              <li className="before:content-['→_'] before:text-sky-600">Sunday 3am: log rotation</li>
+              <li className="before:content-['→_'] before:text-sky-600">Sunday 4am: disk cleanup</li>
             </ul>
             <CardTitle>Log Files</CardTitle>
-            <ul className="space-y-1 text-[#666] text-xs">
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>logs/erel-inbox.log</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>logs/health.log</Code></li>
-              <li className="before:content-['→_'] before:text-[#00e5ff]"><Code>logs/erel-inbox-stderr.log</Code></li>
+            <ul className="space-y-1 text-slate-500 text-xs">
+              <li className="before:content-['→_'] before:text-sky-600"><Code>logs/erel-inbox.log</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>logs/health.log</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600"><Code>logs/erel-inbox-stderr.log</Code></li>
             </ul>
           </Card>
         </div>
-      </section>
+      </CollapsibleSection>
 
       {/* Project Structure */}
-      <section>
-        <SectionTitle>Project Structure</SectionTitle>
+      <CollapsibleSection title="Project Structure">
         <Card>
-          <pre className="text-[11px] text-[#555] leading-relaxed overflow-x-auto whitespace-pre">
+          <pre className="text-[11px] text-slate-400 leading-relaxed overflow-x-auto whitespace-pre">
 {`~/evrnew-marketing/
 ├── agents/
 │   ├── email-inbox/
-│   │   ├── erel_inbox_monitor.py   `}<span className="text-[#00e5ff]">← 24/7 Gmail daemon</span>{`
-│   │   ├── gmail_auth.py           `}<span className="text-[#00e5ff]">← one-time OAuth setup</span>{`
+│   │   ├── erel_inbox_monitor.py   `}<span className="text-sky-600">← 24/7 Gmail daemon</span>{`
+│   │   ├── gmail_auth.py           `}<span className="text-sky-600">← one-time OAuth setup</span>{`
 │   │   └── erel_send.py
 │   └── telegram-bot/
-│       ├── bot.py                  `}<span className="text-[#00e5ff]">← Telegram bot (PTB polling)</span>{`
+│       ├── bot.py                  `}<span className="text-sky-600">← Telegram bot (PTB polling)</span>{`
 │       └── webhook.py
 ├── config/
-│   ├── agents.yaml                 `}<span className="text-[#00e5ff]">← all 8 agent definitions</span>{`
+│   ├── agents.yaml                 `}<span className="text-sky-600">← all 8 agent definitions</span>{`
 │   ├── gmail/credentials.json
-│   ├── mcp/claude-mcp-config.json  `}<span className="text-[#00e5ff]">← MCP server config</span>{`
+│   ├── mcp/claude-mcp-config.json  `}<span className="text-sky-600">← MCP server config</span>{`
 │   └── prompts/base_system_prompt.txt
-├── data/inbox/                     `}<span className="text-[#00e5ff]">← routed email JSON files</span>{`
+├── data/inbox/                     `}<span className="text-sky-600">← routed email JSON files</span>{`
 ├── logs/
 ├── scripts/
-│   ├── moltbook_heartbeat.py       `}<span className="text-[#00e5ff]">← 30min heartbeat</span>{`
+│   ├── moltbook_heartbeat.py       `}<span className="text-sky-600">← 30min heartbeat</span>{`
 │   └── cron/{health-check,log-rotate,disk-cleanup,restart-services}.sh
-└── sites/openclaw-site/            `}<span className="text-[#00e5ff]">← this Mission Control app</span>
+└── sites/openclaw-site/            `}<span className="text-sky-600">← this Mission Control app</span>
           </pre>
         </Card>
-      </section>
+      </CollapsibleSection>
 
       {/* Tech Stack */}
-      <section>
-        <SectionTitle>Full Tech Stack</SectionTitle>
+      <CollapsibleSection title="Full Tech Stack">
         <Card>
           <div className="flex flex-wrap gap-2">
             {[
@@ -358,53 +306,44 @@ export default function OverviewPage() {
             ))}
           </div>
         </Card>
-      </section>
+      </CollapsibleSection>
 
       {/* Self-maintenance commands */}
-      <section>
-        <SectionTitle>Self-Maintenance Commands</SectionTitle>
+      <CollapsibleSection title="Self-Maintenance Commands">
         <Card>
           <ul className="space-y-1 text-xs">
-            <li><Code>~/evrnew-marketing/scripts/cron/health-check.sh</Code> <span className="text-[#555]">— system health check</span></li>
+            <li><Code>~/evrnew-marketing/scripts/cron/health-check.sh</Code> <span className="text-slate-400">— system health check</span></li>
             <li><Code>~/evrnew-marketing/scripts/cron/restart-services.sh [all|inbox|ollama|n8n]</Code></li>
             <li><Code>~/evrnew-marketing/scripts/cron/log-rotate.sh</Code></li>
             <li><Code>~/evrnew-marketing/scripts/cron/disk-cleanup.sh</Code></li>
             <li><Code>tail -f ~/evrnew-marketing/logs/health.log</Code></li>
           </ul>
         </Card>
-      </section>
+      </CollapsibleSection>
 
-      <footer className="text-center text-[#333] text-[11px] pt-4 pb-8 border-t border-[#2a2a2a]">
-        <span className="text-[#00e5ff]">EREL.AI</span> — Evrnew LLC Autonomous Marketing &amp; Operations Server &nbsp;|&nbsp; March 2026
+      <footer className="text-center text-slate-400 text-[11px] pt-4 pb-8 border-t border-slate-200">
+        <span className="text-sky-600">EREL.AI</span> — Evrnew LLC Autonomous Marketing &amp; Operations Server &nbsp;|&nbsp; March 2026
       </footer>
     </div>
   )
 }
 
-// Local layout helpers (shared across overview sections)
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-[10px] tracking-[3px] uppercase text-[#00e5ff] mb-3 pb-2 border-b border-[#2a2a2a]">
-      {children}
-    </h2>
-  )
-}
 
 function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-[#161616] border border-[#2a2a2a] rounded-lg p-4 ${className}`}>
+    <div className={`bg-slate-50 border border-slate-200 rounded-lg p-4 hover:shadow-md hover:border-slate-300 transition-all ${className}`}>
       {children}
     </div>
   )
 }
 
 function CardTitle({ children }: { children: React.ReactNode }) {
-  return <h3 className="text-[13px] font-semibold text-[#e8e8e8] mb-2">{children}</h3>
+  return <h3 className="text-[13px] font-semibold text-slate-900 mb-2">{children}</h3>
 }
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
-    <code className="bg-white/5 text-[#00e5ff] text-[11px] px-1.5 py-0.5 rounded">
+    <code className="bg-slate-100 text-sky-600 text-[11px] px-1.5 py-0.5 rounded">
       {children}
     </code>
   )

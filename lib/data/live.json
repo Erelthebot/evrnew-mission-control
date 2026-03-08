@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-03-08T05:13:29.028Z",
+  "generatedAt": "2026-03-08T05:31:29.720Z",
   "ads": {
     "google": [
       {
@@ -1237,41 +1237,40 @@
       "2026-03-07 07:00:01,655 [INFO] content: === Content Agent starting ==="
     ],
     "inbox": [
-      "2026-03-07 20:00:19,209 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:05:19,403 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:10:19,714 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:15:19,780 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:20:20,083 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:25:20,308 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:30:20,665 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:35:20,970 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 20:40:21,175 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
       "2026-03-07 20:45:21,485 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
       "2026-03-07 20:50:21,816 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
       "2026-03-07 20:55:22,451 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
       "2026-03-07 21:00:22,758 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
       "2026-03-07 21:05:23,015 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
-      "2026-03-07 21:10:23,252 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0"
+      "2026-03-07 21:10:23,252 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
+      "2026-03-07 21:15:23,575 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
+      "2026-03-07 21:15:23,776 [EREL] INFO: 2 unread message(s)",
+      "2026-03-07 21:15:24,138 [EREL] INFO: [LOW] New text message from 22000 -> general_inbox",
+      "2026-03-07 21:15:24,562 [EREL] INFO: [LOW] New text message from 22000 -> general_inbox",
+      "2026-03-07 21:20:24,713 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
+      "2026-03-07 21:25:24,967 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
+      "2026-03-07 21:30:25,311 [EREL] INFO: file_cache is only supported with oauth2client<4.0.0",
+      "2026-03-07 21:30:25,518 [EREL] INFO: 1 unread message(s)",
+      "2026-03-07 21:30:25,909 [EREL] INFO: [LOW] [Erelthebot/evrnew-mission-control] Possible valid secrets d -> general_inbox"
     ],
     "telegram": [
-      "2026-03-07 21:10:58,944 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:11:09,105 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:11:19,269 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:11:29,459 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:11:39,627 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:11:49,794 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:12:00,077 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:12:10,239 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:12:20,454 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:12:30,620 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:12:40,832 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:12:51,002 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:13:01,172 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:13:11,340 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
-      "2026-03-07 21:13:21,504 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\""
+      "2026-03-07 21:28:57,716 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:29:07,913 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:29:18,071 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:29:28,232 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:29:38,395 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:29:48,556 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:29:58,718 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:30:08,910 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:30:19,070 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:30:29,231 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:30:39,426 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:30:49,666 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:30:59,826 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:31:09,984 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\"",
+      "2026-03-07 21:31:20,143 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8756673493:AAGEYSw0TXoB40LJeMz-8mDo88WXhudV-u0/getUpdates \"HTTP/1.1 200 OK\""
     ],
     "moltbook": [
-      "2026-03-07 13:50:46,644 [MOLTBOOK] WARNING: Home check failed: HTTP Error 404: Not Found",
       "2026-03-07 14:20:46,748 [MOLTBOOK] WARNING: Home check failed: HTTP Error 404: Not Found",
       "2026-03-07 14:50:46,960 [MOLTBOOK] WARNING: Home check failed: HTTP Error 404: Not Found",
       "2026-03-07 15:20:47,171 [MOLTBOOK] WARNING: Home check failed: HTTP Error 404: Not Found",
@@ -1285,14 +1284,15 @@
       "2026-03-07 20:24:47,781 [MOLTBOOK] WARNING: Home check failed: HTTP Error 404: Not Found",
       "2026-03-07 20:54:48,020 [MOLTBOOK] WARNING: Home check failed: HTTP Error 404: Not Found",
       "2026-03-07 20:56:35,257 [MOLTBOOK] INFO: Moltbook heartbeat started",
-      "2026-03-07 20:56:35,340 [MOLTBOOK] INFO: karma=0 notifications=0 dms=00"
+      "2026-03-07 20:56:35,340 [MOLTBOOK] INFO: karma=0 notifications=0 dms=00",
+      "2026-03-07 21:26:35,542 [MOLTBOOK] INFO: karma=0 notifications=0 dms=00"
     ],
     "health": [
-      "[2026-03-07 21:00:00] RAM in use: ~3GB",
-      "[2026-03-07 21:00:00] OpenClaw: running",
-      "[2026-03-07 21:00:00] Ollama: running",
-      "[2026-03-07 21:00:00] Inbox monitor: running",
-      "[2026-03-07 21:00:00] Health check complete"
+      "[2026-03-07 21:30:00] RAM in use: ~2GB",
+      "[2026-03-07 21:30:00] OpenClaw: running",
+      "[2026-03-07 21:30:00] Ollama: running",
+      "[2026-03-07 21:30:00] Inbox monitor: running",
+      "[2026-03-07 21:30:00] Health check complete"
     ]
   }
 }

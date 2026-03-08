@@ -9,14 +9,14 @@ import { activityLogs, timeAgo, type ActivityLog } from '@/lib/data'
 type Category = ActivityLog['category'] | 'all'
 
 const CATEGORY_STYLES: Record<ActivityLog['category'], { color: string; label: string; icon: string }> = {
-  task: { color: '#00e5ff', label: 'Task', icon: '▦' },
-  document: { color: '#a78bfa', label: 'Document', icon: '◻' },
+  task: { color: '#00f5ff', label: 'Task', icon: '▦' },
+  document: { color: '#d070ff', label: 'Document', icon: '◻' },
   memory: { color: '#34d399', label: 'Memory', icon: '◎' },
-  project: { color: '#f97316', label: 'Project', icon: '◈' },
-  event: { color: '#facc15', label: 'Event', icon: '◫' },
+  project: { color: '#ff6600', label: 'Project', icon: '◈' },
+  event: { color: '#ffee00', label: 'Event', icon: '◫' },
   automation: { color: '#f472b6', label: 'Automation', icon: '⟳' },
   agent: { color: '#c084fc', label: 'Agent', icon: '◉' },
-  system: { color: '#22c55e', label: 'System', icon: '◬' },
+  system: { color: '#00ff88', label: 'System', icon: '◬' },
 }
 
 const ALL_ACTORS = ['all', ...Array.from(new Set(activityLogs.map(l => l.actor)))]
@@ -39,16 +39,16 @@ export default function ActivityPage() {
   return (
     <div className="flex h-full">
       {/* Filters sidebar */}
-      <div className="w-44 shrink-0 border-r border-[#2a2a2a] py-4 px-3 space-y-4">
+      <div className="w-44 shrink-0 border-r border-slate-200 py-4 px-3 space-y-4">
         {/* Category filters */}
         <div>
-          <p className="text-[9px] tracking-widest uppercase text-[#333] mb-2 px-2">Category</p>
+          <p className="text-[9px] tracking-widest uppercase text-slate-400 mb-2 px-2">Category</p>
           <button
             onClick={() => setFilterCategory('all')}
-            className={`w-full text-left text-xs px-2 py-1.5 rounded flex items-center justify-between transition-colors ${filterCategory === 'all' ? 'bg-[#00e5ff]/8 text-[#00e5ff]' : 'text-[#555] hover:text-[#888]'}`}
+            className={`w-full text-left text-xs px-2 py-1.5 rounded flex items-center justify-between transition-colors ${filterCategory === 'all' ? 'bg-sky-50 text-sky-600' : 'text-slate-500 hover:text-slate-600'}`}
           >
             <span>All</span>
-            <span className="text-[10px] text-[#333]">{activityLogs.length}</span>
+            <span className="text-[10px] text-slate-400">{activityLogs.length}</span>
           </button>
           {(Object.entries(CATEGORY_STYLES) as [ActivityLog['category'], typeof CATEGORY_STYLES[ActivityLog['category']]][]).map(([key, style]) => {
             const count = activityLogs.filter(l => l.category === key).length
@@ -56,12 +56,12 @@ export default function ActivityPage() {
               <button
                 key={key}
                 onClick={() => setFilterCategory(key)}
-                className={`w-full text-left text-xs px-2 py-1.5 rounded flex items-center gap-2 transition-colors ${filterCategory === key ? 'font-medium' : 'text-[#555] hover:text-[#888]'}`}
+                className={`w-full text-left text-xs px-2 py-1.5 rounded flex items-center gap-2 transition-colors ${filterCategory === key ? 'font-medium' : 'text-slate-500 hover:text-slate-600'}`}
                 style={filterCategory === key ? { color: style.color } : {}}
               >
                 <span className="text-[10px]">{style.icon}</span>
                 <span className="flex-1">{style.label}</span>
-                <span className="text-[10px] text-[#333]">{count}</span>
+                <span className="text-[10px] text-slate-400">{count}</span>
               </button>
             )
           })}
@@ -69,13 +69,13 @@ export default function ActivityPage() {
 
         {/* Actor filter */}
         <div>
-          <p className="text-[9px] tracking-widest uppercase text-[#333] mb-2 px-2">Actor</p>
+          <p className="text-[9px] tracking-widest uppercase text-slate-400 mb-2 px-2">Actor</p>
           <div className="space-y-0.5">
             {ALL_ACTORS.slice(0, 12).map(actor => (
               <button
                 key={actor}
                 onClick={() => setFilterActor(actor)}
-                className={`w-full text-left text-[11px] px-2 py-1 rounded truncate transition-colors ${filterActor === actor ? 'bg-white/5 text-[#aaa]' : 'text-[#444] hover:text-[#666]'}`}
+                className={`w-full text-left text-[11px] px-2 py-1 rounded truncate transition-colors ${filterActor === actor ? 'bg-slate-100 text-slate-600' : 'text-slate-500 hover:text-slate-500'}`}
               >
                 {actor === 'all' ? 'All actors' : actor}
               </button>
@@ -87,10 +87,10 @@ export default function ActivityPage() {
       {/* Main feed */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Toolbar */}
-        <div className="px-5 py-3 border-b border-[#2a2a2a] flex items-center gap-3">
+        <div className="px-5 py-3 border-b border-slate-200 flex items-center gap-3">
           <div>
-            <h1 className="text-[10px] tracking-[3px] uppercase text-[#00e5ff]">Activity Feed</h1>
-            <p className="text-[#444] text-[10px]">{filtered.length} events &mdash; real-time audit log</p>
+            <h1 className="text-[10px] tracking-[3px] uppercase text-sky-600">Activity Feed</h1>
+            <p className="text-slate-500 text-[10px]">{filtered.length} events &mdash; real-time audit log</p>
           </div>
           <div className="flex-1" />
           <input
@@ -98,10 +98,10 @@ export default function ActivityPage() {
             placeholder="Search events..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="bg-[#1e1e1e] border border-[#2a2a2a] text-[#aaa] text-xs px-3 py-1.5 rounded outline-none focus:border-[#444] placeholder:text-[#444] w-52"
+            className="bg-slate-100 border border-slate-200 text-slate-600 text-xs px-3 py-1.5 rounded outline-none focus:border-[#6040a0] placeholder:text-slate-500 w-52"
           />
           {/* Convex note */}
-          <span className="text-[10px] text-[#333] hidden lg:block">
+          <span className="text-[10px] text-slate-400 hidden lg:block">
             → Connect Convex for live streaming
           </span>
         </div>
@@ -109,17 +109,17 @@ export default function ActivityPage() {
         {/* Feed */}
         <div className="flex-1 overflow-y-auto">
           {filtered.length === 0 ? (
-            <div className="text-[#333] text-sm text-center py-16">No events match your filters.</div>
+            <div className="text-slate-400 text-sm text-center py-16">No events match your filters.</div>
           ) : (
             <div>
               {grouped.map(({ day, logs }) => (
                 <div key={day}>
                   {/* Day separator */}
-                  <div className="px-5 py-2 sticky top-0 bg-[#0d0d0d]/95 backdrop-blur-sm z-10">
+                  <div className="px-5 py-2 sticky top-0 bg-white/95 backdrop-blur-sm z-10">
                     <div className="flex items-center gap-3">
-                      <span className="text-[10px] text-[#444] uppercase tracking-wide">{day}</span>
-                      <div className="flex-1 h-px bg-[#1e1e1e]" />
-                      <span className="text-[10px] text-[#333]">{logs.length} events</span>
+                      <span className="text-[10px] text-slate-500 uppercase tracking-wide">{day}</span>
+                      <div className="flex-1 h-px bg-slate-100" />
+                      <span className="text-[10px] text-slate-400">{logs.length} events</span>
                     </div>
                   </div>
 
@@ -152,7 +152,7 @@ function ActivityRow({ log, isLast }: { log: ActivityLog; isLast: boolean }) {
         >
           {style.icon}
         </div>
-        {!isLast && <div className="w-px flex-1 bg-[#1e1e1e] mt-1" />}
+        {!isLast && <div className="w-px flex-1 bg-slate-100 mt-1" />}
       </div>
 
       {/* Content */}
@@ -164,11 +164,11 @@ function ActivityRow({ log, isLast }: { log: ActivityLog; isLast: boolean }) {
           >
             {log.action}
           </span>
-          <span className="text-[10px] text-[#555]">by <span className="text-[#666]">{log.actor}</span></span>
-          <span className="text-[10px] text-[#333] ml-auto">{timeAgo(log.timestamp)}</span>
+          <span className="text-[10px] text-slate-500">by <span className="text-slate-500">{log.actor}</span></span>
+          <span className="text-[10px] text-slate-400 ml-auto">{timeAgo(log.timestamp)}</span>
         </div>
-        <p className="text-xs text-[#555] mt-1 leading-relaxed">{log.details}</p>
-        <span className="text-[10px] text-[#333]">
+        <p className="text-xs text-slate-500 mt-1 leading-relaxed">{log.details}</p>
+        <span className="text-[10px] text-slate-400">
           {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </span>
       </div>

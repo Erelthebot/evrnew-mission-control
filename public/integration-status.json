@@ -1,0 +1,101 @@
+{
+  "integrations": [
+    {
+      "name": "Anthropic Claude API",
+      "purpose": "Content, strategy, copy generation",
+      "status": "active"
+    },
+    {
+      "name": "Gmail API (OAuth2)",
+      "purpose": "Inbox monitoring, email send for erel@evrnew.com",
+      "status": "active"
+    },
+    {
+      "name": "Ollama (local)",
+      "purpose": "Local llama3.2:3b inference — model running",
+      "status": "active"
+    },
+    {
+      "name": "xAI Grok API",
+      "purpose": "Fast/cheap monitoring tasks",
+      "status": "active"
+    },
+    {
+      "name": "GoHighLevel CRM",
+      "purpose": "Lead management, campaigns, automation",
+      "status": "active"
+    },
+    {
+      "name": "DataForSEO",
+      "purpose": "SERP data, keyword research",
+      "status": "active"
+    },
+    {
+      "name": "Google Ads API",
+      "purpose": "Ad performance, bid management",
+      "status": "active"
+    },
+    {
+      "name": "SpyFu",
+      "purpose": "Competitor keyword/ad intelligence",
+      "status": "active"
+    },
+    {
+      "name": "SendGrid",
+      "purpose": "Transactional email delivery",
+      "status": "active"
+    },
+    {
+      "name": "Buffer",
+      "purpose": "Social media scheduling",
+      "status": "active"
+    },
+    {
+      "name": "BrowserBase",
+      "purpose": "Cloud Chrome, authenticated scraping",
+      "status": "active"
+    },
+    {
+      "name": "Google Maps API",
+      "purpose": "Local SEO, competitor mapping",
+      "status": "active"
+    },
+    {
+      "name": "Google Analytics",
+      "purpose": "Site traffic & conversion tracking",
+      "status": "pending",
+      "note": "API key needed"
+    },
+    {
+      "name": "GitHub",
+      "purpose": "Repo management via MCP",
+      "status": "active"
+    },
+    {
+      "name": "Twilio",
+      "purpose": "SMS/voice automation",
+      "status": "active"
+    },
+    {
+      "name": "Moltbook API",
+      "purpose": "AI agent social network, agent heartbeat",
+      "status": "active"
+    },
+    {
+      "name": "Telegram Bot API",
+      "purpose": "Command & control via @evrnew_agent_bot",
+      "status": "active"
+    },
+    {
+      "name": "Google Voice",
+      "purpose": "Phone: +1 (206) 453-0208",
+      "status": "active"
+    }
+  ],
+  "summary": {
+    "active": 17,
+    "pending": 1,
+    "total": 18
+  },
+  "checkedAt": "2026-03-07T21:58:45.226Z"
+}
