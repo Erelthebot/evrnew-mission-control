@@ -11,12 +11,21 @@ const nav = [
     ],
   },
   {
+    group: 'MARKETING',
+    items: [
+      { href: '/marketing', label: 'Marketing Monitor', icon: '◆' },
+      { href: '/strategy', label: 'Strategy', icon: '◈' },
+      { href: '/competitive', label: 'Competitive', icon: '◎' },
+      { href: '/social', label: 'Social', icon: '⊞' },
+    ],
+  },
+  {
     group: 'OPERATIONS',
     items: [
-      { href: '/tasks', label: 'Task Board', icon: '▦' },
-      { href: '/calendar', label: 'Calendar', icon: '◫' },
-      { href: '/projects', label: 'Projects', icon: '◈' },
-      { href: '/documents', label: 'Documents', icon: '◻' },
+      { href: '/operations', label: 'Operations', icon: '⬡' },
+      { href: '/ads', label: 'Google Ads', icon: '◆' },
+      { href: '/email-drip', label: 'Email Drip', icon: '≈' },
+      { href: '/tasks', label: 'Tasks', icon: '▦' },
     ],
   },
   {
@@ -45,20 +54,20 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="w-52 shrink-0 flex flex-col bg-[#0d0d0d] border-r border-[#2a2a2a] h-screen overflow-y-auto">
+    <aside className="w-52 shrink-0 flex flex-col bg-white border-r border-slate-200 h-screen overflow-y-auto">
       {/* Brand */}
-      <div className="px-4 pt-5 pb-4 border-b border-[#2a2a2a]">
-        <div className="text-[#00e5ff] text-xs font-bold tracking-widest uppercase mb-0.5">
+      <div className="px-4 pt-5 pb-4 border-b border-slate-200">
+        <div className="text-sky-600 text-xs font-bold tracking-widest uppercase mb-0.5">
           EVRNEW
         </div>
-        <div className="text-[#444] text-[10px] tracking-wide">Mission Control</div>
+        <div className="text-slate-500 text-[10px] tracking-wide">Mission Control</div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 px-2 py-3 space-y-4">
         {nav.map((group) => (
           <div key={group.group}>
-            <div className="px-2 mb-1 text-[9px] tracking-widest text-[#333] uppercase font-bold">
+            <div className="px-2 mb-1 text-[9px] tracking-widest text-slate-400 uppercase font-bold">
               {group.group}
             </div>
             <ul className="space-y-0.5">
@@ -71,8 +80,8 @@ export default function Sidebar() {
                       className={`
                         flex items-center gap-2.5 px-2 py-1.5 rounded text-[12px] transition-colors
                         ${isActive
-                          ? 'bg-[#00e5ff]/8 text-[#00e5ff] border-l-2 border-[#00e5ff] pl-[6px]'
-                          : 'text-[#666] hover:text-[#aaa] hover:bg-[#ffffff06]'
+                          ? 'bg-gradient-to-r from-sky-50 to-violet-50 text-sky-600 border-l-2 border-sky-500 pl-[6px] shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
                         }
                       `}
                     >
@@ -88,13 +97,37 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom system info */}
-      <div className="px-4 py-3 border-t border-[#2a2a2a] space-y-1">
+      <div className="px-4 py-3 border-t border-slate-200 space-y-2.5">
+        {/* Status row */}
         <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 bg-[#22c55e] rounded-full inline-block" />
-          <span className="text-[10px] text-[#444]">erel.local — M4 Pro</span>
+          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block animate-pulse shrink-0" />
+          <span className="text-[10px] font-semibold text-slate-600">erel.local — M4 Pro</span>
         </div>
-        <div className="text-[10px] text-[#333]">CrewAI · 8 agents running</div>
-        <div className="text-[10px] text-[#333]">openclaw-evrnew.netlify.app</div>
+
+        {/* Hardware */}
+        <div className="space-y-0.5">
+          <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Hardware</p>
+          <p className="text-[10px] text-slate-500">Mac Mini M4 Pro</p>
+          <p className="text-[10px] text-slate-400">macOS Sequoia 15 (Darwin 25.3)</p>
+          <p className="text-[10px] text-slate-400">926 GB · 11 GB used</p>
+          <p className="text-[10px] text-slate-400">Auto-login · Auto-restart</p>
+        </div>
+
+        {/* Identity */}
+        <div className="space-y-0.5">
+          <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Identity</p>
+          <p className="text-[10px] text-slate-500">erel@evrnew.com</p>
+          <p className="text-[10px] text-slate-400">Passwordless sudo</p>
+          <p className="text-[10px] text-slate-400 font-mono">ssh erel@erel.local</p>
+          <p className="text-[10px] text-slate-400">Claude Code: unrestricted</p>
+          <p className="text-[10px] text-slate-400">Full admin</p>
+        </div>
+
+        {/* Agents + site */}
+        <div className="space-y-0.5 pt-0.5 border-t border-slate-100">
+          <p className="text-[10px] text-emerald-600 font-medium">CrewAI · 8 agents running</p>
+          <p className="text-[10px] text-slate-400">openclaw-evrnew.netlify.app</p>
+        </div>
       </div>
     </aside>
   )
