@@ -67,7 +67,7 @@ export default function AdsPage() {
   }, [])
 
   return (
-    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8 overflow-y-auto">
+    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>

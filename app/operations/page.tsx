@@ -133,7 +133,7 @@ const runsToday = agents.filter(a => a.lastRun.startsWith('Today')).length
 
 export default function OperationsPage() {
   return (
-    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8 overflow-y-auto" style={{ background: '#ffffff', minHeight: '100%' }}>
+    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8" style={{ background: '#ffffff', minHeight: '100%' }}>
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>

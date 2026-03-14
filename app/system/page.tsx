@@ -13,25 +13,31 @@ const HEALTH_STYLES: Record<ServiceHealth, { dot: string; label: string; color: 
 }
 
 const CRON_JOBS = [
-  { name: 'Health Check', schedule: '*/15 * * * *', description: 'health-check.sh', lastRun: '2026-03-05T11:45:00Z', status: 'ok' },
-  { name: 'Log Rotation', schedule: '0 3 * * 0', description: 'log-rotate.sh (Sunday 3 AM)', lastRun: '2026-03-02T03:00:00Z', status: 'ok' },
-  { name: 'Disk Cleanup', schedule: '0 4 * * 0', description: 'disk-cleanup.sh (Sunday 4 AM)', lastRun: '2026-03-02T04:00:00Z', status: 'ok' },
-  { name: 'Service Restart', schedule: 'on-demand', description: 'restart-services.sh [all|inbox|ollama|n8n]', lastRun: '2026-03-01T09:00:00Z', status: 'ok' },
+  { name: 'Health Check', schedule: '*/15 * * * *', description: 'health-check.sh', lastRun: '2026-03-11T00:00:00Z', status: 'ok' },
+  { name: 'Log Rotation', schedule: '0 3 * * 0', description: 'log-rotate.sh (Sunday 3 AM)', lastRun: '2026-03-09T03:00:00Z', status: 'ok' },
+  { name: 'Disk Cleanup', schedule: '0 4 * * 0', description: 'disk-cleanup.sh (Sunday 4 AM)', lastRun: '2026-03-09T04:00:00Z', status: 'ok' },
+  { name: 'Moltbook Heartbeat', schedule: '*/30 * * * *', description: 'com.evrnew.moltbook-heartbeat launchd', lastRun: '2026-03-11T00:00:00Z', status: 'ok' },
+  { name: 'Service Restart', schedule: 'on-demand', description: 'restart-services.sh [all|inbox|ollama|n8n]', lastRun: '2026-03-11T00:00:00Z', status: 'ok' },
 ]
 
 const API_KEYS = [
   { name: 'Anthropic API', env: 'ANTHROPIC_API_KEY', configured: true },
   { name: 'xAI Grok API', env: 'XAI_API_KEY', configured: true },
   { name: 'GoHighLevel API', env: 'GHL_API_KEY', configured: true },
-  { name: 'DataForSEO', env: 'DATAFORSEO_LOGIN', configured: true },
   { name: 'SpyFu API', env: 'SPYFU_API_KEY', configured: true },
   { name: 'SendGrid API', env: 'SENDGRID_API_KEY', configured: true },
-  { name: 'Buffer API', env: 'BUFFER_ACCESS_TOKEN', configured: true },
   { name: 'BrowserBase API', env: 'BROWSERBASE_API_KEY', configured: true },
   { name: 'Google Ads API', env: 'GOOGLE_ADS_DEVELOPER_TOKEN', configured: true },
   { name: 'Google Maps API', env: 'GOOGLE_MAPS_API_KEY', configured: true },
-  { name: 'Netlify Token', env: 'NETLIFY_AUTH_TOKEN', configured: true },
+  { name: 'Google Analytics', env: 'GA_MEASUREMENT_ID', configured: true },
+  { name: 'Moltbook API', env: 'MOLTBOOK_API_KEY', configured: true },
   { name: 'Telegram Bot Token', env: 'TELEGRAM_BOT_TOKEN', configured: true },
+  { name: 'OpenClaw Token', env: 'OPENCLAW_GATEWAY_TOKEN', configured: true },
+  { name: 'Twilio SID', env: 'TWILIO_ACCOUNT_SID', configured: true },
+  { name: 'Brave Search API', env: 'BRAVE_API_KEY', configured: true },
+  { name: 'GitHub Token', env: 'GITHUB_TOKEN', configured: true },
+  { name: 'DataForSEO', env: 'DATAFORSEO_LOGIN', configured: false },
+  { name: 'Buffer API', env: 'BUFFER_ACCESS_TOKEN', configured: false },
 ]
 
 export default function SystemPage() {
@@ -48,7 +54,7 @@ export default function SystemPage() {
   const configuredKeys = API_KEYS.filter(k => k.configured).length
 
   return (
-    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8 overflow-y-auto">
+    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8">
       <div>
         <h1 className="text-[10px] tracking-[3px] uppercase text-sky-600 mb-1">System Status</h1>
         <p className="text-slate-500 text-xs">{onlineCount}/{systemServices.length} services online &middot; {activeIntegrations} integrations active &middot; {configuredKeys}/{API_KEYS.length} API keys configured</p>
@@ -84,7 +90,7 @@ export default function SystemPage() {
           <div className="sm:w-64 space-y-2 text-xs">
             <p className="text-[10px] tracking-widest uppercase text-slate-400 mb-2">Services Running</p>
             <div className="space-y-1.5">
-              {['CrewAI (8 agents)', 'Gmail Inbox Monitor', 'Telegram Bot', 'Ollama llama3.2:3b', 'n8n Automation', 'Moltbook Heartbeat'].map(s => (
+              {['OpenClaw Gateway (port 18789)', '@theErelbot (Telegram)', 'Gmail Inbox Monitor', 'n8n Automation', 'Ollama llama3.2:3b', 'Moltbook Heartbeat', 'BrowserBase Relay (port 18892)'].map(s => (
                 <div key={s} className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block shrink-0" />
                   <span className="text-slate-400">{s}</span>

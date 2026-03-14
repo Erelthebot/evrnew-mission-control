@@ -43,7 +43,7 @@ export default function StrategyPage() {
   const sections = parseSections(content)
 
   return (
-    <div className="px-5 py-6 max-w-4xl mx-auto space-y-6 overflow-y-auto">
+    <div className="px-5 py-6 max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>

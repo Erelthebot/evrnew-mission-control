@@ -136,7 +136,7 @@ export default function OfficePage() {
   const combinedFeed = buildCombinedFeed(agentLogs)
 
   return (
-    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8 overflow-y-auto">
+    <div className="px-5 py-6 max-w-6xl mx-auto space-y-8">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>

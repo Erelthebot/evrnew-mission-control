@@ -61,7 +61,7 @@ export default function CalendarPage() {
   const totalEstimates = calendarEvents.filter(e => e.category === 'estimate').length
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="px-0 py-0">
       {/* Header */}
       <div className="px-5 py-3 border-b border-slate-200 flex items-center gap-4 flex-wrap">
         <div>
@@ -111,7 +111,7 @@ export default function CalendarPage() {
       </div>
 
       {/* Weekly grid */}
-      <div className="flex-1 overflow-auto p-4">
+      <div className="p-4">
         <div className="grid grid-cols-7 gap-2 min-w-[900px]">
           {days.map(day => {
             const events = eventsForDay(day.key)

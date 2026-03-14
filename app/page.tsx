@@ -68,8 +68,8 @@ export default function OverviewPage() {
           <Card>
             <CardTitle>Core Framework</CardTitle>
             <ul className="space-y-1 text-slate-500 text-xs">
-              <li className="before:content-['→_'] before:text-sky-600">CrewAI 1.10.0 — agent orchestration</li>
-              <li className="before:content-['→_'] before:text-sky-600">Python 3.12 venv at <Code>~/evrnew-venv</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">OpenClaw Gateway v2026.3.8 — AI agent runtime</li>
+              <li className="before:content-['→_'] before:text-sky-600">Python 3.12 venv at <Code>~/evrnew-venv</Code> (CrewAI 1.10.0)</li>
               <li className="before:content-['→_'] before:text-sky-600">n8n 2.10.2 — workflow automation</li>
               <li className="before:content-['→_'] before:text-sky-600">Ollama (llama3.2:3b) — local inference</li>
             </ul>
@@ -77,7 +77,7 @@ export default function OverviewPage() {
           <Card>
             <CardTitle>AI Models</CardTitle>
             <ul className="space-y-1 text-slate-500 text-xs">
-              <li className="before:content-['→_'] before:text-sky-600">Claude Sonnet/Opus — content &amp; strategy</li>
+              <li className="before:content-['→_'] before:text-sky-600">Claude Sonnet 4.6 — primary agent model (OpenClaw)</li>
               <li className="before:content-['→_'] before:text-sky-600">Grok Fast (xAI) — monitoring &amp; high-volume</li>
               <li className="before:content-['→_'] before:text-sky-600">Ollama llama3.2:3b — local fallback</li>
             </ul>
@@ -120,29 +120,29 @@ export default function OverviewPage() {
       </CollapsibleSection>
 
       {/* Telegram Bot */}
-      <CollapsibleSection title="Telegram Bot — @evrnew_agent_bot">
+      <CollapsibleSection title="Telegram Bot — @theErelbot">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <Card>
-            <div className="mb-2">{badge('green', 'token active')}</div>
-            <CardTitle>Bot: @evrnew_agent_bot</CardTitle>
-            <p className="text-slate-500 text-xs mb-3">python-telegram-bot v22 with polling + optional webhook mode via aiohttp.</p>
+            <div className="mb-2">{badge('green', 'live — openclaw powered')}</div>
+            <CardTitle>Bot: @theErelbot</CardTitle>
+            <p className="text-slate-500 text-xs mb-3">Powered by OpenClaw Gateway. Claude Sonnet 4.6 model. Full tool access including Brave Search, BrowserBase, and shell execution. Handles DMs and the Evrnew Marketing group.</p>
             <ul className="space-y-1 text-slate-500 text-xs">
-              <li className="before:content-['→_'] before:text-sky-600"><Code>/status</Code> — Moltbook heartbeat + site status</li>
-              <li className="before:content-['→_'] before:text-sky-600"><Code>/brief</Code> — Today&apos;s marketing brief</li>
-              <li className="before:content-['→_'] before:text-sky-600"><Code>/deploy</Code> — Deploy via Netlify CLI</li>
-              <li className="before:content-['→_'] before:text-sky-600"><Code>/agents</Code> — List active agents</li>
-              <li className="before:content-['→_'] before:text-sky-600">Free-text → routed to Claude API</li>
+              <li className="before:content-['→_'] before:text-sky-600">DMs from Spencer (8688596596) and Johnny (8733921180)</li>
+              <li className="before:content-['→_'] before:text-sky-600">Evrnew Marketing group (chat ID: -5294204937)</li>
+              <li className="before:content-['→_'] before:text-sky-600">Free-text → full Claude Sonnet 4.6 response with tool use</li>
+              <li className="before:content-['→_'] before:text-sky-600">No code blocks or markdown in Telegram responses — plain text only</li>
             </ul>
           </Card>
           <Card>
-            <CardTitle>Files</CardTitle>
+            <CardTitle>Infrastructure</CardTitle>
             <ul className="space-y-1 text-slate-500 text-xs mb-4">
-              <li className="before:content-['→_'] before:text-sky-600"><Code>agents/telegram-bot/bot.py</Code> — main bot</li>
-              <li className="before:content-['→_'] before:text-sky-600"><Code>agents/telegram-bot/webhook.py</Code> — aiohttp server</li>
-              <li className="before:content-['→_'] before:text-sky-600"><Code>agents/telegram-bot/setup_bot.py</Code> — BotFather auto</li>
+              <li className="before:content-['→_'] before:text-sky-600">OpenClaw gateway: <Code>http://localhost:18789</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">LaunchAgent: <Code>ai.openclaw.gateway</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">Config: <Code>~/Projects/OpenClaw/openclaw.json</Code></li>
+              <li className="before:content-['→_'] before:text-sky-600">Reinstall guide: <Code>~/Desktop/000Earl000.rtf</Code></li>
             </ul>
-            <CardTitle>Token</CardTitle>
-            <p className="text-slate-400 text-xs">Stored at <Code>~/.config/evrnew/telegram_bot_token</Code> or <Code>TELEGRAM_BOT_TOKEN</Code> env var.</p>
+            <CardTitle>Key People</CardTitle>
+            <p className="text-slate-400 text-xs">Spencer Michael (team lead) · Johnny Walker (crew)</p>
           </Card>
         </div>
       </CollapsibleSection>
@@ -282,6 +282,7 @@ export default function OverviewPage() {
             {[
               ['blue', 'Python 3.12'],
               ['blue', 'CrewAI 1.10.0'],
+              ['blue', 'OpenClaw Gateway'],
               ['blue', 'Anthropic SDK 0.84.0'],
               ['blue', 'OpenAI SDK 2.24.0'],
               ['blue', 'Playwright 1.58.0'],
@@ -297,7 +298,8 @@ export default function OverviewPage() {
               ['green', 'ChromaDB 1.1.1'],
               ['green', 'pandas 3.0.1'],
               ['yellow', 'BrowserBase SDK 1.5.0'],
-              ['yellow', 'Google Chrome + ext.'],
+              ['yellow', 'Brave Browser'],
+              ['yellow', 'OpenClaw v2026.3.8'],
               ['red', 'macOS LaunchAgents'],
               ['red', 'launchd / cron'],
               ['red', 'Homebrew 5.0.16'],

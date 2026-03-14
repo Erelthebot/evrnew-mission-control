@@ -36,7 +36,7 @@ export default function DocumentsPage() {
   })
 
   return (
-    <div className="flex h-full">
+    <div className="flex">
       <div className="flex-1 flex flex-col min-w-0">
         {/* Toolbar */}
         <div className="px-5 py-3 border-b border-slate-200 flex items-center gap-3 flex-wrap">
@@ -90,7 +90,7 @@ export default function DocumentsPage() {
         </div>
 
         {/* Document list */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex-1 p-5">
           {filtered.length === 0 ? (
             <div className="text-slate-400 text-sm text-center py-16">No documents found.</div>
           ) : (
@@ -115,7 +115,7 @@ export default function DocumentsPage() {
             <span className="text-[10px] tracking-widest uppercase text-slate-500">Document Detail</span>
             <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-slate-600 text-sm">✕</button>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-xs">
+          <div className="flex-1 px-4 py-4 space-y-4 text-xs">
             <div>
               <TypeBadge type={selected.type} />
               <p className="text-slate-900 font-semibold text-sm leading-snug mt-2">{selected.title}</p>

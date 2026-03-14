@@ -15,7 +15,8 @@ const nav = [
     items: [
       { href: '/marketing', label: 'Marketing Monitor', icon: '◆' },
       { href: '/strategy', label: 'Strategy', icon: '◈' },
-      { href: '/competitive', label: 'Competitive', icon: '◎' },
+      { href: "/competitive", label: "Competitive", icon: "◎" },
+      { href: "/blog", label: "Blog / SEO", icon: "✎" },
       { href: '/social', label: 'Social', icon: '⊞' },
     ],
   },

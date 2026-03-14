@@ -11,7 +11,7 @@ export default function EmailDripPage() {
   const generatedAt = emailDrip.generatedAt ? new Date(emailDrip.generatedAt).toLocaleString() : null
 
   return (
-    <div className="px-5 py-6 max-w-5xl mx-auto space-y-6 overflow-y-auto">
+    <div className="px-5 py-6 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>

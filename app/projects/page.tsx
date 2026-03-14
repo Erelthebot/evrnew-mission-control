@@ -21,7 +21,7 @@ export default function ProjectsPage() {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex">
       {/* Main */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Toolbar */}
@@ -47,7 +47,7 @@ export default function ProjectsPage() {
         </div>
 
         {/* Project cards */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex-1 p-5">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {filtered.map(project => (
               <ProjectCard
@@ -68,7 +68,7 @@ export default function ProjectsPage() {
             <span className="text-[10px] tracking-widest uppercase text-slate-500">Project Detail</span>
             <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-slate-600 text-sm">✕</button>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-xs">
+          <div className="flex-1 px-4 py-4 space-y-4 text-xs">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <StatusChip status={selected.status} />

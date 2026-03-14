@@ -36,7 +36,7 @@ export default function MemoryPage() {
   const countFor = (cat: MemoryCategory) => memories.filter(m => m.category === cat).length
 
   return (
-    <div className="flex h-full">
+    <div className="flex">
       {/* Left: category sidebar */}
       <div className="w-44 shrink-0 border-r border-slate-200 py-4 px-3 space-y-0.5">
         <p className="text-[9px] tracking-widest uppercase text-slate-400 mb-3 px-2">Categories</p>
@@ -79,7 +79,7 @@ export default function MemoryPage() {
         </div>
 
         {/* Memory grid */}
-        <div className="flex-1 overflow-y-auto p-5">
+        <div className="flex-1 p-5">
           {filtered.length === 0 ? (
             <div className="text-slate-400 text-sm text-center py-16">No memories match your search.</div>
           ) : (
@@ -104,7 +104,7 @@ export default function MemoryPage() {
             <span className="text-[10px] tracking-widest uppercase text-slate-500">Memory Detail</span>
             <button onClick={() => setSelected(null)} className="text-slate-500 hover:text-slate-600 text-sm">✕</button>
           </div>
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 text-xs">
+          <div className="flex-1 px-4 py-4 space-y-4 text-xs">
             <div>
               <span
                 className="text-[10px] px-2 py-0.5 rounded border inline-block mb-2"
