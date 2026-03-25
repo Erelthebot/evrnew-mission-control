@@ -8,8 +8,8 @@
 const fs = require('fs')
 const path = require('path')
 
-const DATA_ROOT = '/Users/erel/evrnew-marketing/data'
-const LOGS_ROOT = '/Users/erel/evrnew-marketing/logs'
+const DATA_ROOT = '/Users/erel_master/evrnew-marketing/data'
+const LOGS_ROOT = '/Users/erel_master/evrnew-marketing/logs'
 const OUT_FILE = path.join(__dirname, '..', 'lib', 'data', 'live.json')
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

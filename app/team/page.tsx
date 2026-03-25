@@ -45,7 +45,7 @@ export default function TeamPage() {
       {/* System Agents */}
       <section>
         <SectionTitle>System Agents — CrewAI Marketing Stack (8)</SectionTitle>
-        <p className="text-slate-500 text-xs mb-4">Original 8 specialized marketing agents orchestrated by CrewAI, running 24/7 on the erel.local server.</p>
+        <p className="text-slate-500 text-xs mb-4">Original 8 specialized marketing agents orchestrated by CrewAI, running 24/7 on the erel-masters-macbook-pro.local cluster node.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {systemAgents.map(agent => (
             <SystemAgentCard key={agent.id} agent={agent} />

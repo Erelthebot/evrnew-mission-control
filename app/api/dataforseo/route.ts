@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { NextRequest, NextResponse } from 'next/server'
 
 const BASE_URL = 'https://api.dataforseo.com/v3'

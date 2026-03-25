@@ -105,6 +105,71 @@ const agents = [
     outputDir: 'data/email-drip/',
     accentColor: '#ef4444',
   },
+  {
+    id: 9,
+    role: 'Nano Banana 2 — Creative Image Bot',
+    plist: 'com.evrnew.agent-image',
+    status: 'active',
+    schedule: 'On-demand / batch',
+    llm: 'gemini-flash-image',
+    lastRun: 'On-demand',
+    description: 'Generates creative marketing images using Gemini 3.1 Flash Image Preview. Called by social/ads agents or directly via CLI/Telegram with a prompt or batch brief.',
+    tools: ['Gemini API', 'Anthropic', 'Telegram'],
+    outputDir: 'data/images/',
+    accentColor: '#f59e0b',
+  },
+  {
+    id: 10,
+    role: 'GEO-SEO Agent',
+    plist: 'com.evrnew.agent-geo-seo',
+    status: 'active',
+    schedule: 'Weekly Mon 9:00 AM',
+    llm: 'claude-sonnet',
+    lastRun: 'Mon Mar 17, 9:00 AM',
+    description: 'Runs AI search optimization audits on evrnew.com — checks citability, AI crawler access, schema, technical SEO, and E-E-A-T. Reports to Telegram.',
+    tools: ['Anthropic', 'DataForSEO', 'Telegram'],
+    outputDir: 'data/geo-seo/',
+    accentColor: '#06b6d4',
+  },
+  {
+    id: 11,
+    role: 'Email Inbox Monitor',
+    plist: 'com.evrnew.email-inbox',
+    status: 'active',
+    schedule: '24/7 daemon',
+    llm: 'claude-haiku',
+    lastRun: 'Continuous',
+    description: 'Monitors erel@evrnew.com via Gmail API (OAuth2), classifies inbound emails, and routes leads and alerts to the appropriate agents.',
+    tools: ['Gmail API', 'Anthropic', 'GHL'],
+    outputDir: 'logs/inbox/',
+    accentColor: '#8b5cf6',
+  },
+  {
+    id: 12,
+    role: 'Telegram Bot',
+    plist: 'com.evrnew.telegram-bot',
+    status: 'active',
+    schedule: 'Always-on',
+    llm: 'claude-sonnet',
+    lastRun: 'Continuous',
+    description: 'Handles inbound Telegram messages and commands from Erel and team. Routes requests to the appropriate agents and delivers summaries and alerts.',
+    tools: ['Telegram API', 'Anthropic', 'OpenClaw'],
+    outputDir: 'logs/telegram/',
+    accentColor: '#0ea5e9',
+  },
+  {
+    id: 13,
+    role: 'Thumbtack Webhook',
+    plist: 'com.evrnew.thumbtack-webhook',
+    status: 'active',
+    schedule: 'Always-on',
+    llm: 'none',
+    lastRun: 'Continuous',
+    description: 'Receives lead POST webhooks from Thumbtack API and creates contacts in GoHighLevel. Exposed via Cloudflare Tunnel at mc-api.evrnew.com.',
+    tools: ['Thumbtack API', 'GHL API', 'Cloudflare Tunnel'],
+    outputDir: 'logs/thumbtack/',
+    accentColor: '#10b981',
+  },
 ]
 
 const LOG_LINES = [
@@ -138,18 +203,18 @@ export default function OperationsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-[10px] tracking-[3px] uppercase font-bold mb-1" style={{ color: '#0077b6' }}>Agent Fleet</h1>
-          <p className="text-xs" style={{ color: '#64748b' }}>8 autonomous marketing agents running on erel.local</p>
+          <p className="text-xs" style={{ color: '#64748b' }}>13 autonomous marketing agents running on erel-masters-macbook-pro.local</p>
         </div>
         <div className="flex items-center gap-2 rounded-full px-3 py-1.5 border-2" style={{ background: '#f0fdf4', borderColor: '#16a34a' }}>
           <span className="w-2 h-2 rounded-full inline-block animate-pulse" style={{ background: '#16a34a' }} />
-          <span className="text-[11px] font-bold tracking-widest" style={{ color: '#15803d' }}>8/8 ONLINE</span>
+          <span className="text-[11px] font-bold tracking-widest" style={{ color: '#15803d' }}>13/13 ONLINE</span>
         </div>
       </div>
 
       {/* Fleet Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Total Agents', value: '8', color: '#0077b6', bg: '#e0f2fe', border: '#0077b6' },
+          { label: 'Total Agents', value: '13', color: '#0077b6', bg: '#e0f2fe', border: '#0077b6' },
           { label: 'Active Now', value: String(activeCount), color: '#16a34a', bg: '#f0fdf4', border: '#16a34a' },
           { label: 'Runs Today', value: String(runsToday), color: '#7c3aed', bg: '#f5f3ff', border: '#7c3aed' },
           { label: 'Outputs Generated', value: '47', color: '#b45309', bg: '#fffbeb', border: '#f59e0b' },

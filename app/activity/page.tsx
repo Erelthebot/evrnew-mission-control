@@ -1,10 +1,10 @@
 'use client'
 
 // Activity Feed — Real-time timestamped audit log.
-// Convex-ready: swap activityLogs with useQuery + pagination.
 
-import { useState } from 'react'
-import { activityLogs, timeAgo, type ActivityLog } from '@/lib/data'
+import { useState, useEffect } from 'react'
+import { timeAgo, type ActivityLog } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
 
 type Category = ActivityLog['category'] | 'all'
 
@@ -19,12 +19,30 @@ const CATEGORY_STYLES: Record<ActivityLog['category'], { color: string; label: s
   system: { color: '#00ff88', label: 'System', icon: '◬' },
 }
 
-const ALL_ACTORS = ['all', ...Array.from(new Set(activityLogs.map(l => l.actor)))]
-
 export default function ActivityPage() {
+  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([])
+  const [loading, setLoading] = useState(true)
   const [filterCategory, setFilterCategory] = useState<Category>('all')
   const [filterActor, setFilterActor] = useState('all')
   const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    supabase.from('activity_logs').select('*').order('timestamp', { ascending: false }).limit(100).then(({ data, error }) => {
+      if (!error && data) {
+        setActivityLogs(data.map((l: any) => ({
+          ...l,
+          relatedId: l.related_id,
+        })) as ActivityLog[])
+      }
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return (
+    <div className="px-5 py-6 text-xs text-slate-400">Loading activity feed...</div>
+  )
+
+  const ALL_ACTORS = ['all', ...Array.from(new Set(activityLogs.map(l => l.actor)))]
 
   const filtered = activityLogs.filter(l => {
     const matchCat = filterCategory === 'all' || l.category === filterCategory

@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-
-let liveData: any = {}
-try { liveData = require('@/lib/data/live.json') } catch {}
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 function parseSections(md: string): { title: string; body: string }[] {
   if (!md) return []
@@ -26,9 +24,23 @@ function parseSections(md: string): { title: string; body: string }[] {
 }
 
 export default function StrategyPage() {
-  const strategy = liveData.strategy || { content: '', generatedAt: null }
-  const content: string = strategy.content || ''
-  const generatedAt = strategy.generatedAt ? new Date(strategy.generatedAt).toLocaleString() : null
+  const [content, setContent] = useState<string>('')
+  const [generatedAt, setGeneratedAt] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.from('agent_outputs').select('content,generated_at').eq('agent_name', 'strategy').eq('output_type', 'weekly_brief').single().then(({ data }) => {
+      if (data) {
+        setContent(data.content || '')
+        setGeneratedAt(data.generated_at ? new Date(data.generated_at).toLocaleString() : null)
+      }
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return (
+    <div className="px-5 py-6 text-xs text-slate-400">Loading strategy brief...</div>
+  )
 
   if (!content) {
     return (

@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { NextRequest, NextResponse } from 'next/server'
 
 const SYSTEM = `You are Erel, the AI behind OpenClaw — an AI-native marketing agency built specifically for insulation and home performance contractors in the Pacific Northwest. You help businesses like EVRNEW grow through fully automated marketing: SEO blog posts, Google and Meta ad copy, social media, email drip campaigns, competitive intelligence, and more — all running 24/7 on autonomous AI agents.

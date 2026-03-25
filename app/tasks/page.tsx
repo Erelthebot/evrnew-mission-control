@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 type TaskStatus = 'todo' | 'in_progress' | 'blocked' | 'done'
 type TaskPriority = 'critical' | 'high' | 'medium' | 'low'
@@ -15,21 +16,6 @@ interface Task {
   project: string
   notes: string
 }
-
-const tasks: Task[] = [
-  { id: 't1', title: 'Follow up: Martinez attic estimate', status: 'in_progress', priority: 'high', owner: 'Johnny', due: '2026-03-07', project: 'Sales Pipeline', notes: 'VM left, email sent, call Thu 10am' },
-  { id: 't2', title: 'Submit PSE rebate — Johnson + Garcia', status: 'todo', priority: 'critical', owner: 'Diane', due: '2026-03-10', project: 'Rebate Fulfillment', notes: 'Deadline March 10 5pm' },
-  { id: 't3', title: 'Post crawlspace lead installer job listing', status: 'todo', priority: 'high', owner: 'Misty', due: '2026-03-08', project: 'Hiring', notes: '' },
-  { id: 't4', title: 'Build GHL automation: estimate follow-up 3-touch sequence', status: 'in_progress', priority: 'critical', owner: 'Erel', due: '2026-03-07', project: 'CRM System', notes: 'Day 1 email + Day 3 SMS + Day 7 last chance' },
-  { id: 't5', title: 'Finalize attic installation SOP v3.0', status: 'in_progress', priority: 'high', owner: 'Documentation Agent', due: '2026-03-09', project: 'Operations Build-Out', notes: 'Adding blower door test section' },
-  { id: 't6', title: 'Close Amazon HQ / Cascade Tech bid', status: 'todo', priority: 'critical', owner: 'Johnny', due: '2026-03-08', project: 'Sales Pipeline', notes: 'Competing with 2 bids, key differentiator: commercial insurance + crew size' },
-  { id: 't7', title: 'Get QB API credentials from Diane', status: 'blocked', priority: 'high', owner: 'Diane', due: '2026-03-06', project: 'QuickBooks/Invoicing', notes: 'Blocking entire QB integration' },
-  { id: 't8', title: 'Launch Bellevue spray foam landing page', status: 'todo', priority: 'high', owner: 'Marketing Agent', due: '2026-03-10', project: 'Marketing Automation', notes: 'Content written, needs CMS publish' },
-  { id: 't9', title: 'Q1 Google Ads campaign review', status: 'in_progress', priority: 'high', owner: 'Ads Agent', due: '2026-03-08', project: 'Marketing Automation', notes: 'Paused 3 underperforming groups' },
-  { id: 't10', title: 'Research WA contractor license for remediation work', status: 'todo', priority: 'medium', owner: 'Erel', due: '2026-03-15', project: 'Attic Remediation Services', notes: '' },
-  { id: 't11', title: 'Get equipment pricing for crawlspace division', status: 'todo', priority: 'high', owner: 'Misty', due: '2026-03-10', project: 'Crawlspace Division Launch', notes: 'Dehumidifier supply deal needed' },
-  { id: 't12', title: 'Train Johnny on new GHL pipeline stages', status: 'todo', priority: 'medium', owner: 'Erel', due: '2026-03-12', project: 'CRM System', notes: '' },
-]
 
 const PRIORITY_BADGE: Record<TaskPriority, string> = {
   critical: 'bg-red-100 text-red-700 border-red-300',
@@ -55,7 +41,20 @@ function initials(name: string): string {
 }
 
 export default function TasksPage() {
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
   const [selected, setSelected] = useState<Task | null>(null)
+
+  useEffect(() => {
+    supabase.from('tasks').select('*').order('due').then(({ data, error }) => {
+      if (!error && data) setTasks(data as Task[])
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return (
+    <div className="px-5 py-6 text-xs text-slate-400">Loading tasks...</div>
+  )
 
   const total = tasks.length
   const inProgress = tasks.filter(t => t.status === 'in_progress').length

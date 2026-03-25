@@ -2,134 +2,140 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
 
 const nav = [
-  {
-    group: 'MAIN',
-    items: [
-      { href: '/', label: 'Overview', icon: '⬡' },
-    ],
-  },
-  {
-    group: 'MARKETING',
-    items: [
-      { href: '/marketing', label: 'Marketing Monitor', icon: '◆' },
-      { href: '/strategy', label: 'Strategy', icon: '◈' },
-      { href: "/competitive", label: "Competitive", icon: "◎" },
-      { href: "/blog", label: "Blog / SEO", icon: "✎" },
-      { href: '/social', label: 'Social', icon: '⊞' },
-    ],
-  },
-  {
-    group: 'OPERATIONS',
-    items: [
-      { href: '/operations', label: 'Operations', icon: '⬡' },
-      { href: '/ads', label: 'Google Ads', icon: '◆' },
-      { href: '/email-drip', label: 'Email Drip', icon: '≈' },
-      { href: '/tasks', label: 'Tasks', icon: '▦' },
-    ],
-  },
-  {
-    group: 'KNOWLEDGE',
-    items: [
-      { href: '/memory', label: 'Memory', icon: '◎' },
-      { href: '/activity', label: 'Activity Feed', icon: '≈' },
-    ],
-  },
-  {
-    group: 'TEAM',
-    items: [
-      { href: '/team', label: 'Team', icon: '◉' },
-      { href: '/office', label: 'Office', icon: '⊞' },
-    ],
-  },
-  {
-    group: 'SYSTEM',
-    items: [
-      { href: '/system', label: 'System Status', icon: '◬' },
-    ],
-  },
+  { group: 'MAIN', items: [
+    { href: '/', label: 'Mission Control', icon: '◈' },
+  ]},
+  { group: 'MARKETING', items: [
+    { href: '/marketing',   label: 'Marketing',   icon: '◆' },
+    { href: '/strategy',    label: 'Strategy',    icon: '◎' },
+    { href: '/competitive', label: 'Competitive', icon: '◬' },
+    { href: '/blog',        label: 'Blog / SEO',  icon: '✎' },
+    { href: '/social',      label: 'Social',      icon: '⊞' },
+  ]},
+  { group: 'OPERATIONS', items: [
+    { href: '/operations', label: 'Operations',  icon: '⬡' },
+    { href: '/ads',        label: 'Google Ads',  icon: '◆' },
+    { href: '/email-drip', label: 'Email Drip',  icon: '≈' },
+    { href: '/tasks',      label: 'Tasks',       icon: '▦' },
+  ]},
+  { group: 'KNOWLEDGE', items: [
+    { href: '/memory',   label: 'Memory',        icon: '◎' },
+    { href: '/activity', label: 'Activity Feed', icon: '≈' },
+  ]},
+  { group: 'SYSTEM', items: [
+    { href: '/team',   label: 'Team',   icon: '◉' },
+    { href: '/system', label: 'System', icon: '◬' },
+  ]},
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen)
+  }
 
   return (
-    <aside className="w-52 shrink-0 flex flex-col bg-white border-r border-slate-200 h-screen overflow-y-auto">
-      {/* Brand */}
-      <div className="px-4 pt-5 pb-4 border-b border-slate-200">
-        <div className="text-sky-600 text-xs font-bold tracking-widest uppercase mb-0.5">
-          EVRNEW
-        </div>
-        <div className="text-slate-500 text-[10px] tracking-wide">Mission Control</div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 px-2 py-3 space-y-4">
-        {nav.map((group) => (
-          <div key={group.group}>
-            <div className="px-2 mb-1 text-[9px] tracking-widest text-slate-400 uppercase font-bold">
-              {group.group}
-            </div>
-            <ul className="space-y-0.5">
-              {group.items.map((item) => {
-                const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`
-                        flex items-center gap-2.5 px-2 py-1.5 rounded text-[12px] transition-colors
-                        ${isActive
-                          ? 'bg-gradient-to-r from-sky-50 to-violet-50 text-sky-600 border-l-2 border-sky-500 pl-[6px] shadow-sm'
-                          : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
-                        }
-                      `}
-                    >
-                      <span className="text-[11px] shrink-0">{item.icon}</span>
-                      {item.label}
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
+    <>
+      <button 
+        onClick={toggleSidebar} 
+        style={{ 
+          display: 'none', 
+          '@media (max-width: 768px)': { 
+            display: 'block', 
+            position: 'fixed', 
+            top: 10, 
+            left: 10, 
+            zIndex: 20, 
+            background: '#ffffff', 
+            border: '1px solid #e2e8f0', 
+            borderRadius: '4px', 
+            padding: '5px 10px', 
+            cursor: 'pointer' 
+          } 
+        }}
+      >
+        {isOpen ? 'Close' : 'Menu'}
+      </button>
+      <aside 
+        style={{ 
+          width: 188, 
+          flexShrink: 0, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          background: '#ffffff', 
+          borderRight: '1px solid #e2e8f0', 
+          height: '100vh', 
+          overflowY: 'auto',
+          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s ease',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          zIndex: 15,
+          '@media (min-width: 769px)': {
+            transform: 'translateX(0)',
+            position: 'relative'
+          }
+        }}
+      >
+        {/* Brand */}
+        <div style={{ padding: '16px 14px 12px', borderBottom: '1px solid #e2e8f0' }}>
+          <div style={{ fontSize: 13, fontWeight: 700, letterSpacing: '-0.02em', background: 'linear-gradient(135deg, #0ea5e9, #7c3aed)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: 2 }}>
+            EREL.AI
           </div>
-        ))}
-      </nav>
-
-      {/* Bottom system info */}
-      <div className="px-4 py-3 border-t border-slate-200 space-y-2.5">
-        {/* Status row */}
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block animate-pulse shrink-0" />
-          <span className="text-[10px] font-semibold text-slate-600">erel.local — M4 Pro</span>
+          <div style={{ fontSize: 8, letterSpacing: '0.15em', color: '#94a3b8', textTransform: 'uppercase' }}>
+            Mission Control
+          </div>
         </div>
 
-        {/* Hardware */}
-        <div className="space-y-0.5">
-          <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Hardware</p>
-          <p className="text-[10px] text-slate-500">Mac Mini M4 Pro</p>
-          <p className="text-[10px] text-slate-400">macOS Sequoia 15 (Darwin 25.3)</p>
-          <p className="text-[10px] text-slate-400">926 GB · 11 GB used</p>
-          <p className="text-[10px] text-slate-400">Auto-login · Auto-restart</p>
-        </div>
+        {/* Nav */}
+        <nav style={{ flex: 1, padding: '10px 6px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {nav.map((group) => (
+            <div key={group.group}>
+              <div style={{ fontSize: 8, letterSpacing: '0.2em', color: '#cbd5e1', textTransform: 'uppercase', fontWeight: 700, padding: '0 6px', marginBottom: 3 }}>
+                {group.group}
+              </div>
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {group.items.map((item) => {
+                  const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+                  return (
+                    <li key={item.href}>
+                      <Link 
+                        href={item.href} 
+                        style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '5px 7px', borderRadius: 4, fontSize: 11, textDecoration: 'none', background: active ? '#f0f9ff' : 'transparent', color: active ? '#0ea5e9' : '#64748b', borderLeft: active ? '2px solid #0ea5e9' : '2px solid transparent', transition: 'all 0.15s' }} 
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <span style={{ fontSize: 9, opacity: 0.6 }}>{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))}
+        </nav>
 
-        {/* Identity */}
-        <div className="space-y-0.5">
-          <p className="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Identity</p>
-          <p className="text-[10px] text-slate-500">erel@evrnew.com</p>
-          <p className="text-[10px] text-slate-400">Passwordless sudo</p>
-          <p className="text-[10px] text-slate-400 font-mono">ssh erel@erel.local</p>
-          <p className="text-[10px] text-slate-400">Claude Code: unrestricted</p>
-          <p className="text-[10px] text-slate-400">Full admin</p>
+        {/* Footer */}
+        <div style={{ padding: '10px 14px', borderTop: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span className="dot-live" />
+            <span style={{ fontSize: 10, color: '#334155', fontWeight: 600 }}>erel.local</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <span style={{ fontSize: 9, color: '#94a3b8' }}>Mac Mini M4 Pro · macOS 15</span>
+            <span style={{ fontSize: 9, color: '#94a3b8' }}>erel@evrnew.com</span>
+          </div>
+          <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 6 }}>
+            <span style={{ fontSize: 9, color: '#16a34a', fontWeight: 600 }}>8 agents active</span>
+          </div>
         </div>
-
-        {/* Agents + site */}
-        <div className="space-y-0.5 pt-0.5 border-t border-slate-100">
-          <p className="text-[10px] text-emerald-600 font-medium">CrewAI · 8 agents running</p>
-          <p className="text-[10px] text-slate-400">openclaw-evrnew.netlify.app</p>
-        </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   )
 }

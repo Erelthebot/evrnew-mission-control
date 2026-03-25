@@ -1,14 +1,35 @@
 'use client'
 
 // Projects — EVRNEW major initiatives board.
-// Convex-ready: swap projects array with useQuery hook.
 
-import { useState } from 'react'
-import { projects, PROJECT_STATUS_COLORS, type Project, type ProjectStatus, type Priority, PRIORITY_COLORS } from '@/lib/data'
+import { useState, useEffect } from 'react'
+import { PROJECT_STATUS_COLORS, type Project, type ProjectStatus, type Priority, PRIORITY_COLORS } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
 
 export default function ProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([])
+  const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<ProjectStatus | 'all'>('all')
   const [selected, setSelected] = useState<Project | null>(null)
+
+  useEffect(() => {
+    supabase.from('projects').select('*').then(({ data, error }) => {
+      if (!error && data) {
+        // Map snake_case from DB to camelCase for Project interface
+        setProjects(data.map((p: any) => ({
+          ...p,
+          nextActions: p.next_actions ?? [],
+          percentComplete: p.percent_complete ?? 0,
+          updatedAt: p.updated_at,
+        })) as Project[])
+      }
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return (
+    <div className="px-5 py-6 text-xs text-slate-400">Loading projects...</div>
+  )
 
   const filtered = filter === 'all' ? projects : projects.filter(p => p.status === filter)
 

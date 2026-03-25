@@ -1,0 +1,43 @@
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+/**
+ * Server-side Supabase client (anon key + cookie-based session).
+ * Use in Server Components, Route Handlers, and Server Actions.
+ */
+export async function createClient() {
+  const cookieStore = await cookies()
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {
+            // Ignore — setAll called from a Server Component (read-only context)
+          }
+        },
+      },
+    }
+  )
+}
+
+/**
+ * Admin client using service role key — bypasses RLS.
+ * Server-side only. Never expose to the browser.
+ */
+export function createAdminClient() {
+  const { createClient: _create } = require('@supabase/supabase-js')
+  return _create(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { persistSession: false } }
+  )
+}

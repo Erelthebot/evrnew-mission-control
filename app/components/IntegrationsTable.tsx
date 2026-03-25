@@ -5,53 +5,41 @@ import { useEffect, useState, useCallback } from 'react'
 interface Integration {
   name: string
   purpose: string
-  status: 'active' | 'pending' | 'error'
+  category: string
+  status: 'active' | 'pending' | 'blocked' | 'error'
   note?: string
 }
 
 interface StatusResponse {
   integrations: Integration[]
-  summary: { active: number; pending: number; total: number }
+  summary: { active: number; pending: number; blocked: number; total: number }
   checkedAt: string
 }
 
-const POLL_INTERVAL_MS = 15 * 60 * 1000 // 15 minutes
+const POLL_MS = 60_000 // 1 minute
 
-function statusLabel(i: Integration) {
-  if (i.status === 'active') return '✓ Active'
-  if (i.status === 'pending') return `⚠ ${i.note ?? 'Pending'}`
-  return '✗ Error'
+function statusStyle(status: Integration['status']) {
+  if (status === 'active')  return { color: '#16a34a', label: '✓ Active' }
+  if (status === 'blocked') return { color: '#dc2626', label: '✗ Blocked' }
+  if (status === 'pending') return { color: '#d97706', label: '⚠ Pending' }
+  return { color: '#94a3b8', label: '— Unknown' }
 }
 
-function statusColor(status: Integration['status']) {
-  if (status === 'active') return 'text-emerald-600'
-  if (status === 'pending') return 'text-amber-500'
-  return 'text-red-600'
-}
-
-function formatTime(iso: string) {
-  try {
-    return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  } catch {
-    return '—'
-  }
-}
+const CATEGORIES = ['AI', 'SEO', 'Ads', 'Infra', 'Comms', 'CRM', 'Misc']
 
 export default function IntegrationsTable() {
-  const [data, setData] = useState<StatusResponse | null>(null)
+  const [data, setData]       = useState<StatusResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [countdown, setCountdown] = useState(POLL_INTERVAL_MS / 1000)
+  const [error, setError]     = useState<string | null>(null)
+  const [filter, setFilter]   = useState<string>('All')
 
   const fetchStatus = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const res = await fetch('/integration-status.json')
+      const res = await fetch('/api/integration-status', { cache: 'no-store' })
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
-      const json: StatusResponse = await res.json()
-      setData(json)
-      setCountdown(POLL_INTERVAL_MS / 1000)
+      setData(await res.json())
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch')
     } finally {
@@ -59,101 +47,87 @@ export default function IntegrationsTable() {
     }
   }, [])
 
-  // Initial fetch
+  useEffect(() => { fetchStatus() }, [fetchStatus])
   useEffect(() => {
-    fetchStatus()
+    const t = setInterval(fetchStatus, POLL_MS)
+    return () => clearInterval(t)
   }, [fetchStatus])
 
-  // Poll every 5 minutes
-  useEffect(() => {
-    const interval = setInterval(fetchStatus, POLL_INTERVAL_MS)
-    return () => clearInterval(interval)
-  }, [fetchStatus])
-
-  // Countdown ticker
-  useEffect(() => {
-    const tick = setInterval(() => {
-      setCountdown(prev => (prev <= 1 ? POLL_INTERVAL_MS / 1000 : prev - 1))
-    }, 1000)
-    return () => clearInterval(tick)
-  }, [])
-
-  const integrations = data?.integrations ?? []
-  const summary = data?.summary
+  const all = data?.integrations ?? []
+  const shown = filter === 'All' ? all : all.filter(i => i.category === filter)
+  const s = data?.summary
 
   return (
     <div>
-      {/* Header bar */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex gap-3 text-xs">
-          {summary && (
-            <>
-              <span className="text-emerald-600 font-medium">✓ {summary.active} active</span>
-              {summary.pending > 0 && (
-                <span className="text-amber-500 font-medium">⚠ {summary.pending} pending</span>
-              )}
-            </>
-          )}
+      {/* Summary + controls */}
+      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+        <div className="flex gap-3 text-xs flex-wrap">
+          {s && <>
+            <span className="text-emerald-600 font-medium">✓ {s.active} active</span>
+            {s.pending > 0 && <span className="text-amber-500 font-medium">⚠ {s.pending} pending</span>}
+            {s.blocked > 0 && <span className="text-red-500 font-medium">✗ {s.blocked} blocked</span>}
+            <span className="text-slate-400">{s.total} total</span>
+          </>}
         </div>
-        <div className="flex items-center gap-2 text-[10px] text-slate-400">
-          {loading && <span className="animate-pulse">Checking…</span>}
-          {!loading && data && (
-            <>
-              <span>Updated {formatTime(data.checkedAt)}</span>
-              <span>· next in {Math.floor(countdown / 60)}:{String(countdown % 60).padStart(2, '0')}</span>
-            </>
-          )}
-          <button
-            onClick={fetchStatus}
-            disabled={loading}
-            className="ml-1 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-300 hover:text-slate-600 transition-colors disabled:opacity-40"
-            title="Refresh now"
-          >
-            ↻
-          </button>
+        <div className="flex items-center gap-2 text-[10px]">
+          {data && <span className="text-slate-400">Updated {new Date(data.checkedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>}
+          <button onClick={fetchStatus} disabled={loading} className="px-2 py-0.5 rounded border border-slate-200 hover:border-slate-300 text-slate-400 hover:text-slate-600 transition-colors disabled:opacity-40">↻</button>
         </div>
       </div>
 
-      {error && (
-        <div className="text-xs text-red-500 mb-2">Could not reach status endpoint: {error}</div>
-      )}
+      {/* Category filter */}
+      <div className="flex gap-1 flex-wrap mb-3">
+        {['All', ...CATEGORIES].map(cat => (
+          <button
+            key={cat}
+            onClick={() => setFilter(cat)}
+            className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${filter === cat ? 'bg-sky-50 border-sky-300 text-sky-600' : 'border-slate-200 text-slate-400 hover:border-slate-300'}`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {error && <div className="text-xs text-red-500 mb-2">Error: {error}</div>}
 
       <div className="overflow-x-auto">
         <table className="w-full text-xs border-collapse">
           <thead>
             <tr>
-              {['Integration', 'Purpose', 'Status'].map(h => (
-                <th
-                  key={h}
-                  className="text-left text-[10px] tracking-widest uppercase text-slate-500 pb-3 pr-4 border-b border-slate-200"
-                >
-                  {h}
-                </th>
+              {['Integration', 'Category', 'Purpose', 'Status'].map(h => (
+                <th key={h} className="text-left text-[10px] tracking-widest uppercase text-slate-400 pb-2 pr-4 border-b border-slate-200">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {loading && integrations.length === 0 ? (
-              Array.from({ length: 8 }).map((_, idx) => (
-                <tr key={idx} className="border-b border-[#ffffff04]">
-                  <td className="py-2.5 pr-4"><div className="h-3 w-32 bg-slate-100 rounded animate-pulse" /></td>
-                  <td className="py-2.5 pr-4"><div className="h-3 w-48 bg-slate-100 rounded animate-pulse" /></td>
-                  <td className="py-2.5"><div className="h-3 w-16 bg-slate-100 rounded animate-pulse" /></td>
-                </tr>
-              ))
-            ) : (
-              integrations.map(i => (
-                <tr key={i.name} className="border-b border-[#ffffff04] last:border-0">
-                  <td className="py-2.5 pr-4 text-slate-600">{i.name}</td>
-                  <td className="py-2.5 pr-4 text-slate-400">{i.purpose}</td>
-                  <td className="py-2.5">
-                    <span className={`text-xs font-medium ${statusColor(i.status)}`}>
-                      {statusLabel(i)}
-                    </span>
-                  </td>
-                </tr>
-              ))
-            )}
+            {loading && all.length === 0
+              ? Array.from({ length: 8 }).map((_, i) => (
+                  <tr key={i} className="border-b border-slate-100">
+                    <td className="py-2.5 pr-4"><div className="h-3 w-32 bg-slate-100 rounded animate-pulse" /></td>
+                    <td className="py-2.5 pr-4"><div className="h-3 w-16 bg-slate-100 rounded animate-pulse" /></td>
+                    <td className="py-2.5 pr-4"><div className="h-3 w-48 bg-slate-100 rounded animate-pulse" /></td>
+                    <td className="py-2.5"><div className="h-3 w-16 bg-slate-100 rounded animate-pulse" /></td>
+                  </tr>
+                ))
+              : shown.map(i => {
+                  const st = statusStyle(i.status)
+                  return (
+                    <tr key={i.name} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+                      <td className="py-2.5 pr-4 text-slate-700 font-medium whitespace-nowrap">{i.name}</td>
+                      <td className="py-2.5 pr-4">
+                        <span className="text-[9px] uppercase tracking-wider text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">{i.category}</span>
+                      </td>
+                      <td className="py-2.5 pr-4 text-slate-400 text-[11px]">
+                        {i.purpose}
+                        {i.note && i.status !== 'active' && <span className="block text-[10px] text-amber-500 mt-0.5">{i.note}</span>}
+                      </td>
+                      <td className="py-2.5 whitespace-nowrap">
+                        <span className="text-xs font-medium" style={{ color: st.color }}>{st.label}</span>
+                      </td>
+                    </tr>
+                  )
+                })
+            }
           </tbody>
         </table>
       </div>

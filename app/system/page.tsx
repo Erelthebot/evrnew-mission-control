@@ -71,7 +71,7 @@ export default function SystemPage() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-slate-900">Erel</p>
-                <p className="text-[11px] text-slate-400">AI Marketing Server &middot; Evrnew LLC</p>
+                <p className="text-[11px] text-slate-400">Cluster Node &middot; Evrnew LLC</p>
               </div>
               <span className="ml-auto flex items-center gap-1.5">
                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse inline-block" />
@@ -79,18 +79,18 @@ export default function SystemPage() {
               </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-              <Stat label="Hostname" value="erel.local" />
-              <Stat label="Hardware" value="Mac Mini M4 Pro" />
-              <Stat label="CPU" value="12-core M4 Pro" />
-              <Stat label="RAM" value="24 GB unified" />
+              <Stat label="Hostname" value="erel-masters-macbook-pro.local" />
+              <Stat label="Hardware" value="MacBook Pro M5 Pro" />
+              <Stat label="CPU" value="18-core M5 Pro" />
+              <Stat label="RAM" value="48 GB unified" />
               <Stat label="Storage" value="1 TB SSD" />
-              <Stat label="OS" value="macOS Sequoia" />
+              <Stat label="OS" value="macOS 26.3.1" />
             </div>
           </div>
           <div className="sm:w-64 space-y-2 text-xs">
             <p className="text-[10px] tracking-widest uppercase text-slate-400 mb-2">Services Running</p>
             <div className="space-y-1.5">
-              {['OpenClaw Gateway (port 18789)', '@theErelbot (Telegram)', 'Gmail Inbox Monitor', 'n8n Automation', 'Ollama llama3.2:3b', 'Moltbook Heartbeat', 'BrowserBase Relay (port 18892)'].map(s => (
+              {['OpenClaw Gateway (port 18789)', 'OpenClaw Relay (port 18792)', 'Gmail Inbox Monitor', 'MLX LLM Server · Llama-3.3-70B (port 11434)', 'Mission Control · Next.js (port 3003)', 'AI Triggers (evrnew.ai)', 'nginx · Docker proxy'].map(s => (
                 <div key={s} className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block shrink-0" />
                   <span className="text-slate-400">{s}</span>

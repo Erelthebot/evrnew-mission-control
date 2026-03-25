@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 import { NextRequest, NextResponse } from 'next/server'
 
 const BUFFER_GRAPH = 'https://graph.buffer.com'

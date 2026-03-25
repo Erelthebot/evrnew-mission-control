@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    unoptimized: true,
-  },
+  // server mode — real-time API routes for live dashboard data
 }
 
 module.exports = nextConfig

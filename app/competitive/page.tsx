@@ -1,9 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-
-let liveData: any = {}
-try { liveData = require('@/lib/data/live.json') } catch {}
+import { useState, useEffect } from 'react'
+import { supabase } from '@/lib/supabase'
 
 function parseSections(md: string): { title: string; body: string }[] {
   if (!md) return []
@@ -35,9 +33,23 @@ function getSummaryLine(content: string): string {
 }
 
 export default function CompetitivePage() {
-  const competitive = liveData.competitive || { content: '', generatedAt: null }
-  const content: string = competitive.content || ''
-  const generatedAt = competitive.generatedAt ? new Date(competitive.generatedAt).toLocaleString() : null
+  const [content, setContent] = useState<string>('')
+  const [generatedAt, setGeneratedAt] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    supabase.from('agent_outputs').select('content,generated_at').eq('agent_name', 'competitive').eq('output_type', 'competitive_intel').single().then(({ data }) => {
+      if (data) {
+        setContent(data.content || '')
+        setGeneratedAt(data.generated_at ? new Date(data.generated_at).toLocaleString() : null)
+      }
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return (
+    <div className="px-5 py-6 text-xs text-slate-400">Loading competitive intel...</div>
+  )
 
   if (!content) {
     return (

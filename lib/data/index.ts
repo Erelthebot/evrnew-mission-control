@@ -962,7 +962,7 @@ export const systemServices: SystemService[] = [
   { id: 'ss1', name: 'OpenClaw Gateway', description: 'ai.openclaw.gateway — Erel AI agent on port 18789. Telegram @theErelbot, Claude Sonnet 4.6, full tool access.', status: 'online', lastChecked: '2026-03-11T00:00:00Z', endpoint: 'http://localhost:18789', uptime: '99.9%' },
   { id: 'ss2', name: 'Telegram Bot (@theErelbot)', description: 'OpenClaw-powered Telegram bot — polling mode. Handles DMs and group messages in Evrnew Marketing group.', status: 'online', lastChecked: '2026-03-11T00:00:00Z', uptime: '99.9%' },
   { id: 'ss3', name: 'Mission Control', description: 'Next.js 15 app — this dashboard. Running via com.evrnew.mission-control launchd on port 3333.', status: 'online', lastChecked: '2026-03-11T00:00:00Z', endpoint: 'http://localhost:3333', uptime: '100%' },
-  { id: 'ss4', name: 'Ollama LLM', description: 'llama3.2:3b local inference — port 11434. Fallback model for offline tasks.', status: 'online', lastChecked: '2026-03-11T00:00:00Z', endpoint: 'http://localhost:11434', uptime: '99.5%' },
+  { id: 'ss4', name: 'Ollama LLM', description: 'Mistral Large 2 local inference — port 11434. Primary local model for all agent tasks.', status: 'online', lastChecked: '2026-03-11T00:00:00Z', endpoint: 'http://localhost:11434', uptime: '99.5%' },
   { id: 'ss5', name: 'n8n Automation', description: 'n8n workflow automation engine — port 5678.', status: 'online', lastChecked: '2026-03-11T00:00:00Z', endpoint: 'http://localhost:5678', uptime: '98.9%' },
   { id: 'ss6', name: 'Gmail Inbox Monitor', description: 'erel_inbox_monitor.py — polls erel@evrnew.com every 5 min via Gmail API (OAuth2)', status: 'online', lastChecked: '2026-03-11T00:00:00Z', uptime: '99.8%' },
   { id: 'ss7', name: 'Moltbook Heartbeat', description: 'erel_evrnew agent presence heartbeat — 30min interval via com.evrnew.moltbook-heartbeat launchd', status: 'online', lastChecked: '2026-03-11T00:00:00Z', uptime: '99.8%' },
@@ -989,7 +989,7 @@ export const integrations: Integration[] = [
   { name: 'SendGrid', purpose: 'Transactional email delivery', status: 'active' },
   { name: 'Twilio', purpose: 'SMS/voice automation — +1 (206) 472-1445', status: 'active' },
   { name: 'Buffer', purpose: 'Social media scheduling', status: 'pending', note: 'Access token not yet set' },
-  { name: 'Ollama (local)', purpose: 'Local llama3.2:3b inference — port 11434', status: 'active' },
+  { name: 'Ollama (local)', purpose: 'Mistral Large 2 local inference — port 11434', status: 'active' },
   { name: 'GitHub', purpose: 'Repo management via MCP — token active', status: 'active' },
   { name: 'Moltbook API', purpose: 'AI agent social network — erel_evrnew agent heartbeat', status: 'active' },
 ]

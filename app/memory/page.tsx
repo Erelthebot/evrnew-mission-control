@@ -1,10 +1,10 @@
 'use client'
 
 // Memory — Searchable operational knowledge vault.
-// Convex-ready: swap memories array with useQuery hook.
 
-import { useState } from 'react'
-import { memories, type Memory, type MemoryCategory } from '@/lib/data'
+import { useState, useEffect } from 'react'
+import { type Memory, type MemoryCategory } from '@/lib/data'
+import { supabase } from '@/lib/supabase'
 
 const CATEGORIES: MemoryCategory[] = ['Customers', 'Jobs', 'Sales', 'Operations', 'Team', 'Vendors', 'Automations', 'Finance']
 
@@ -20,9 +20,29 @@ const CATEGORY_STYLES: Record<MemoryCategory, { color: string; accent: string }>
 }
 
 export default function MemoryPage() {
+  const [memories, setMemories] = useState<Memory[]>([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<MemoryCategory | 'All'>('All')
   const [selected, setSelected] = useState<Memory | null>(null)
+
+  useEffect(() => {
+    supabase.from('memories').select('*').then(({ data, error }) => {
+      if (!error && data) {
+        setMemories(data.map((m: any) => ({
+          ...m,
+          tags: m.tags ?? [],
+          relatedProject: m.related_project,
+          updatedAt: m.updated_at,
+        })) as Memory[])
+      }
+      setLoading(false)
+    })
+  }, [])
+
+  if (loading) return (
+    <div className="px-5 py-6 text-xs text-slate-400">Loading memory vault...</div>
+  )
 
   const filtered = memories.filter(m => {
     const matchCat = activeCategory === 'All' || m.category === activeCategory
