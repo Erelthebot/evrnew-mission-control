@@ -1,26 +1,31 @@
 #!/bin/bash
+# health-check.sh - Runs every 15 min via cron
 LOG="$HOME/evrnew-marketing/logs/health.log"
-ALERT=0
+TS=$(date '+%Y-%m-%d %H:%M:%S')
 
-check_service() {
-  local name="$1" cmd="$2"
-  if eval "$cmd" &>/dev/null; then
-    echo "$(date) [OK]   $name" >> "$LOG"
-  else
-    echo "$(date) [FAIL] $name" >> "$LOG"
-    ALERT=1
-  fi
+echo "[$TS] Health check starting" >> "$LOG"
+
+# Check disk space
+DISK=$(df -h / | awk 'NR==2 {print $5}' | tr -d '%')
+[ "$DISK" -gt 85 ] && echo "[$TS] WARN: Disk usage ${DISK}%" >> "$LOG"
+
+# Check RAM
+RAM_USED=$(vm_stat | awk '/Pages active/ {active=$3} /Pages wired/ {wired=$4} END {printf "%.0f", (active+wired)*4096/1073741824}')
+echo "[$TS] RAM in use: ~${RAM_USED}GB" >> "$LOG"
+
+# Check OpenClaw gateway
+pgrep -f "openclaw.*gateway" > /dev/null && echo "[$TS] OpenClaw: running" >> "$LOG" || {
+  echo "[$TS] WARN: OpenClaw gateway down, restarting..." >> "$LOG"
+  launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway >> "$LOG" 2>&1
 }
 
-echo "" >> "$LOG"
-echo "$(date) ---- HEALTH CHECK START ----" >> "$LOG"
-check_service "Internet connectivity" "ping -c1 -W3 8.8.8.8"
-check_service "DNS resolution" "host google.com"
-check_service "Anthropic API reachable" "curl -sf --max-time 5 https://api.anthropic.com/ -o /dev/null"
-check_service "xAI API reachable" "curl -sf --max-time 5 https://api.x.ai/ -o /dev/null"
-check_service "Ollama running" "curl -sf --max-time 3 http://localhost:11434/api/tags -o /dev/null"
-check_service "n8n running" "curl -sf --max-time 3 http://localhost:5678/ -o /dev/null"
-check_service "Erel inbox monitor" "pgrep -f erel_inbox_monitor"
-check_service "Disk space >10GB free" "[ $(df -g / | tail -1 | awk '{print \$4}') -gt 10 ]"
-echo "$(date) ---- HEALTH CHECK END (alerts: $ALERT) ----" >> "$LOG"
-[ $ALERT -eq 1 ] && echo "$(date) *** ATTENTION: One or more services need attention ***" >> "$LOG"
+# Check Ollama
+pgrep -f "ollama" > /dev/null && echo "[$TS] Ollama: running" >> "$LOG" || echo "[$TS] INFO: Ollama not running (on-demand is OK)" >> "$LOG"
+
+# Check inbox monitor
+pgrep -f "erel_inbox_monitor" > /dev/null && echo "[$TS] Inbox monitor: running" >> "$LOG" || {
+  echo "[$TS] WARN: Inbox monitor down, restarting..." >> "$LOG"
+  launchctl kickstart -k gui/$(id -u)/com.evrnew.erel-inbox >> "$LOG" 2>&1
+}
+
+echo "[$TS] Health check complete" >> "$LOG"

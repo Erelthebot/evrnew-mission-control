@@ -1,28 +1,37 @@
 #!/bin/bash
+# restart-services.sh [all|inbox|ollama|n8n|openclaw]
+SERVICE="${1:-all}"
 LOG="$HOME/evrnew-marketing/logs/maintenance.log"
-TARGET="${1:-all}"
+TS=$(date '+%Y-%m-%d %H:%M:%S')
 
 restart_inbox() {
-  launchctl kickstart -k "gui/$(id -u)/com.evrnew.erel-inbox" 2>/dev/null || \
-    (pkill -f erel_inbox_monitor 2>/dev/null; sleep 1; nohup python3 ~/evrnew-marketing/agents/email-inbox/erel_inbox_monitor.py &)
-  echo "$(date): Inbox monitor restarted" >> "$LOG"
+  echo "[$TS] Restarting inbox monitor..." >> "$LOG"
+  launchctl kickstart -k gui/$(id -u)/com.evrnew.erel-inbox >> "$LOG" 2>&1
+}
+
+restart_openclaw() {
+  echo "[$TS] Restarting OpenClaw gateway..." >> "$LOG"
+  launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway >> "$LOG" 2>&1
 }
 
 restart_ollama() {
-  brew services restart ollama 2>/dev/null
-  echo "$(date): Ollama restarted" >> "$LOG"
+  echo "[$TS] Restarting Ollama..." >> "$LOG"
+  pkill ollama 2>/dev/null; sleep 2
+  nohup ollama serve >> "$LOG" 2>&1 &
 }
 
 restart_n8n() {
-  pkill -f n8n 2>/dev/null; sleep 1
-  nohup n8n start &>/dev/null &
-  echo "$(date): n8n restarted" >> "$LOG"
+  echo "[$TS] Restarting n8n..." >> "$LOG"
+  pkill -f "n8n" 2>/dev/null; sleep 2
+  nohup n8n start >> "$LOG" 2>&1 &
 }
 
-case "$TARGET" in
-  inbox) restart_inbox ;;
-  ollama) restart_ollama ;;
-  n8n) restart_n8n ;;
-  all) restart_inbox; restart_ollama; restart_n8n ;;
-  *) echo "Usage: $0 [all|inbox|ollama|n8n]" ;;
+case "$SERVICE" in
+  all)     restart_inbox; restart_openclaw; restart_ollama; restart_n8n ;;
+  inbox)   restart_inbox ;;
+  openclaw) restart_openclaw ;;
+  ollama)  restart_ollama ;;
+  n8n)     restart_n8n ;;
+  *)       echo "Usage: $0 [all|inbox|openclaw|ollama|n8n]" ;;
 esac
+echo "[$TS] Service restart complete: $SERVICE" >> "$LOG"

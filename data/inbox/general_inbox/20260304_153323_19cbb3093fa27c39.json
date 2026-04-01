@@ -1,0 +1,11 @@
+{
+  "id": "19cbb3093fa27c39",
+  "from": "Google Voice <voice-noreply@google.com>",
+  "subject": "Welcome to Google Voice",
+  "date": "Wed, 04 Mar 2026 23:30:48 +0000",
+  "body": "Welcome Business Development,\r\n\r\nEvrnew has given you your own Google Voice number. Use it to connect with  \r\nothers by voice or text, on your phone or any other device. Your new number  \r\nis\r\n(206) 453-0208\r\n\r\nTo get started, get the latest Google Voice app to activate your account.\r\n\r\n  - Android:  \r\nhttps://play.google.com/store/apps/details?id=com.google.android.apps.googlevoice\r\n\r\n  - iPhone: https://itunes.apple.com/app/google-voice/id318698524?mt=8\r\n\r\n  - Web: https://voice.google.com\r\n\r\nAfter activating Google Voice, you can\r\n1) Configure your account and link your personal phone or customize your  \r\nvoicemail greeting.\r\n\r\n2) Try calling and texting from your new number. Your calls will be billed  \r\nto your company.Go to this link to learn more.\r\nhttps://support.google.com/voice#topic=1707989\r\n\r\n3) Get support anytime by finding answers to your questions in the Google  \r\nVoice Help Center.Go to this link to get help.\r\nhttps://support.google.com/voice#topic=1707989\r\n\r\n- The Google Voice team\r\n",
+  "routed_to": "general_inbox",
+  "priority": "low",
+  "rule": "unmatched",
+  "processed_at": "2026-03-04T15:33:23.435630"
+}

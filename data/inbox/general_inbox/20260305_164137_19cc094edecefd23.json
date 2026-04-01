@@ -1,0 +1,11 @@
+{
+  "id": "19cc094edecefd23",
+  "from": "Google <no-reply@accounts.google.com>",
+  "subject": "Security alert",
+  "date": "Fri, 06 Mar 2026 00:38:30 GMT",
+  "body": "[image: Google]\r\nApp password created to sign in to your account\r\n\r\n\r\nerel@evrnew.com\r\nIf you didn't generate this password for Evrnew Marketing System, someone\r\nmight be using your account. Check and secure your account now.\r\nCheck activity\r\n<https://accounts.google.com/AccountChooser?Email=erel@evrnew.com&continue=https://myaccount.google.com/alert/nt/1772757510361?rfn%3D20%26rfnc%3D1%26eid%3D-4581757192264524279%26et%3D0>\r\nYou can also see security activity at\r\nhttps://myaccount.google.com/notifications\r\nYou received this email to let you know about important changes to your\r\nGoogle Account and services.\r\n\u00a9 2026 Google LLC, 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA\r\n",
+  "routed_to": "general_inbox",
+  "priority": "low",
+  "rule": "unmatched",
+  "processed_at": "2026-03-05T16:41:37.643781"
+}

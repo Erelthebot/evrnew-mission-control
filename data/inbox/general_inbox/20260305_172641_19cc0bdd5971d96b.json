@@ -1,0 +1,11 @@
+{
+  "id": "19cc0bdd5971d96b",
+  "from": "Link <notifications@link.com>",
+  "subject": "Verify your email",
+  "date": "Fri, 6 Mar 2026 01:23:11 +0000",
+  "body": "Confirm it\u2019s you\r\nThanks for using Link at Brave Software, Inc.. To confirm it\u2019s you, please verify your email address.\r\nVerify your email : https://support.link.com/confirm-email/confirm?t=csmrect_61UHB41vIJZQnLLvS41Axrn6hrXi4UYa_YzNjZGI5YWEtMGU0OS00N2Q2LTg0MDAtMzBiMDMzODM3OTE2&redirect=link_app&email_id=em_hkdhgiswbmgnliwupqbsii4mgnmwv1\r\n\r\nWhat\u2019s Link?\r\n\r\nA safe way to pay faster at Brave Software, Inc. and everywhere Link is accepted. Learn more (https://link.com)\r\nNeed support?\r\n\r\nFor questions or concerns about your purchase, contact Brave Software, Inc. (https://api.search.brave.com/app/contact).\r\n\r\n354 Oyster Point Blvd, South San Francisco, CA 94080\r\n\r\nTerms (https://link.com/terms)\r\nPrivacy (https://link.com/privacy)\r\nSupport (https://support.link.com)",
+  "routed_to": "general_inbox",
+  "priority": "low",
+  "rule": "unmatched",
+  "processed_at": "2026-03-05T17:26:41.538129"
+}

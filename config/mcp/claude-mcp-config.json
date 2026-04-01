@@ -2,41 +2,67 @@
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/Users/erel/evrnew-marketing"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/erel/evrnew-marketing"
+      ]
     },
     "memory": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
     },
     "fetch": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ]
     },
     "github": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
       "env": {
         "GITHUB_TOKEN": "${GITHUB_TOKEN}"
       }
     },
     "sequential-thinking": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
     },
-    "sqlite": {
+    "playwright": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sqlite", "--db-path", "/Users/erel/evrnew-marketing/data/marketing.db"]
+      "args": [
+        "-y",
+        "@playwright/mcp"
+      ]
     },
-    "google-maps": {
+    "gmail": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-google-maps"],
+      "args": [
+        "-y",
+        "mcp-server-gmail"
+      ],
       "env": {
-        "GOOGLE_MAPS_API_KEY": "${GOOGLE_MAPS_API_KEY}"
+        "GMAIL_ADDRESS": "erel@evrnew.com",
+        "GMAIL_APP_PASSWORD": "${EREL_GMAIL_APP_PASSWORD}"
       }
     },
     "browserbase": {
       "command": "npx",
-      "args": ["-y", "@browserbasehq/mcp-server"],
+      "args": [
+        "-y",
+        "mcp-browserbase"
+      ],
       "env": {
         "BROWSERBASE_API_KEY": "${BROWSERBASE_API_KEY}",
         "BROWSERBASE_PROJECT_ID": "${BROWSERBASE_PROJECT_ID}"

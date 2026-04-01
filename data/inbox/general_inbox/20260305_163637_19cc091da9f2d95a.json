@@ -1,0 +1,11 @@
+{
+  "id": "19cc091da9f2d95a",
+  "from": "GitHub <noreply@github.com>",
+  "subject": "[GitHub] A personal access token (classic) has been added to your account",
+  "date": "Thu, 05 Mar 2026 16:35:09 -0800",
+  "body": "Hey Erelthebot!\r\n\r\nA personal access token (classic) \"Evrnew Marketing System\" with read:org and repo scopes was recently added to your account. Visit https://github.com/settings/tokens for more information.\r\n\r\nTo see this and other security events for your account, visit https://github.com/settings/security-log\r\n\r\nIf you run into problems, please contact support by visiting https://github.com/contact\r\n\r\nThanks,\r\nThe GitHub Team\r\n\r\n",
+  "routed_to": "general_inbox",
+  "priority": "low",
+  "rule": "unmatched",
+  "processed_at": "2026-03-05T16:36:37.058922"
+}

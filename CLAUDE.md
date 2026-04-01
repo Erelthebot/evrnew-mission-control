@@ -66,7 +66,7 @@ When uncertain about current best practices, use web search to verify before pro
 - Python venv at ~/evrnew-venv — always activate before running agents
 
 ## Coding Standards
-- Python 3.12+ for all agent code (venv uses 3.12)
+- Python 3.12+ for all agent code (use: ~/evrnew-marketing/.venv/bin/python3, NOT system python3 which is 3.14) (venv uses 3.12)
 - Type hints required
 - Async where possible for API calls
 - All API keys via environment variables, never hardcoded
