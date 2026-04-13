@@ -20,13 +20,14 @@ async function getAccessToken() {
 async function gaql(customerId: string, accessToken: string, query: string) {
   const cid = customerId.replace(/-/g, '')
   const res = await fetch(
-    `https://googleads.googleapis.com/v19/customers/${cid}/googleAds:searchStream`,
+    `https://googleads.googleapis.com/v20/customers/${cid}/googleAds:searchStream`,
     {
       method: 'POST',
       headers: {
-        Authorization:     `Bearer ${accessToken}`,
-        'developer-token': process.env.GOOGLE_ADS_DEVELOPER_TOKEN!,
-        'Content-Type':    'application/json',
+        Authorization:       `Bearer ${accessToken}`,
+        'developer-token':   process.env.GOOGLE_ADS_DEVELOPER_TOKEN!,
+        'login-customer-id': '1197541100',
+        'Content-Type':      'application/json',
       },
       body: JSON.stringify({ query }),
     }
