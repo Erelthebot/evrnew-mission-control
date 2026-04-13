@@ -1,4 +1,4 @@
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 import { NextResponse } from 'next/server'
 
 async function getAccessToken() {
@@ -24,10 +24,9 @@ async function gaql(customerId: string, accessToken: string, query: string) {
     {
       method: 'POST',
       headers: {
-        Authorization:       `Bearer ${accessToken}`,
-        'developer-token':   process.env.GOOGLE_ADS_DEVELOPER_TOKEN!,
-        'login-customer-id': '1197541100',
-        'Content-Type':      'application/json',
+        Authorization:     `Bearer ${accessToken}`,
+        'developer-token': process.env.GOOGLE_ADS_DEVELOPER_TOKEN!,
+        'Content-Type':    'application/json',
       },
       body: JSON.stringify({ query }),
     }

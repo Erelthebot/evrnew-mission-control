@@ -24,10 +24,9 @@ async function gaql(customerId, accessToken, query) {
     {
       method: 'POST',
       headers: {
-        Authorization:       `Bearer ${accessToken}`,
-        'developer-token':   process.env.GOOGLE_ADS_DEVELOPER_TOKEN,
-        'login-customer-id': '1197541100',
-        'Content-Type':      'application/json',
+        Authorization:     `Bearer ${accessToken}`,
+        'developer-token': process.env.GOOGLE_ADS_DEVELOPER_TOKEN,
+        'Content-Type':    'application/json',
       },
       body: JSON.stringify({ query }),
     }
