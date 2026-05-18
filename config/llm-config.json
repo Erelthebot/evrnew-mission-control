@@ -1,0 +1,65 @@
+{
+  "_comment": "Single source of truth for LLM routing. Run scripts/update-llm-config.sh after editing to propagate changes.",
+  "updated": "2026-05-18",
+
+  "local": {
+    "port": 8080,
+    "model_file": "Holo3-35B-A3B.Q4_K_M.gguf",
+    "model_id": "Holo3-35B-A3B",
+    "arch": "qwen3moe",
+    "size_gb": 21.3,
+    "ctx_tokens": 65536,
+    "gpu_layers": 99,
+    "threads": 8,
+    "parallel": 1,
+    "binary": "~/llama.cpp/build/bin/llama-server",
+    "branch": "experiment/asymmetric-kv",
+    "note": "Screen/GUI agent work — vision, UI grounding, computer-use trajectories."
+  },
+
+  "overflow": {
+    "port": 52416,
+    "proxy_port": 52415,
+    "model": "Llama-3.3-70B-Instruct-4bit",
+    "backend": "mlx_lm.server",
+    "note": "Cheap bulk work, fast fallback. Cluster proxy on :52415 round-robins master + worker."
+  },
+
+  "fast": {
+    "provider": "xai",
+    "env_key": "XAI_API_KEY",
+    "base_url": "https://api.x.ai/v1",
+    "model": "grok-3",
+    "purpose": "Primary chat, copywriting, function calling, ads analysis, monitoring",
+    "temperature": 0.7
+  },
+
+  "reasoning": {
+    "provider": "openrouter",
+    "env_key": "OPENROUTER_API_KEY",
+    "base_url": "https://openrouter.ai/api/v1",
+    "model": "deepseek/deepseek-v4-flash",
+    "default_mode": "non-thinking",
+    "thinking_mode": "thinking",
+    "purpose": "Consensus synthesis, strategic analysis, complex reasoning, long-context",
+    "temperature": 0.4
+  },
+
+  "hub": {
+    "provider": "openrouter",
+    "env_key": "OPENROUTER_API_KEY",
+    "base_url": "https://openrouter.ai/api/v1",
+    "model": "deepseek/deepseek-v4-flash",
+    "purpose": "Hub routing, agent orchestration decisions",
+    "fallback": "overflow"
+  },
+
+  "consensus_engine": {
+    "script": "~/evrnew-marketing/consensus.py",
+    "panel": ["local", "fast (analytical, temp=0.2)", "reasoning (temp=0.4)"],
+    "synthesizer": "reasoning",
+    "note": "Required for ALL strategic recommendations and advertising investment decisions"
+  },
+
+  "disconnected": ["anthropic", "claude", "gemini"]
+}
