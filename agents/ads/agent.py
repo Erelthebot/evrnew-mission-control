@@ -13,13 +13,16 @@ from pathlib import Path
 # Allow running standalone or as a module
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.utils import (
-    get_anthropic_client,
+    call_llm,
     get_logger,
     log,
     notify_telegram,
+    notify_sms,
     save_output,
     today_str,
     now_str,
+    upsert_agent_output,
+    log_activity,
 )
 
 AGENT_NAME = "ads"
@@ -73,7 +76,7 @@ HOOKS = [
 # Google Search ad generation
 # ---------------------------------------------------------------------------
 
-def generate_google_ads(client, ad_group: dict, city: str) -> list[dict]:
+def generate_google_ads(ad_group: dict, city: str) -> list[dict]:
     """Generate 3 Google Search ad variants for an ad group + city."""
     system = (
         "You are an expert Google Ads copywriter for Evrnew LLC, a local insulation company "
@@ -108,13 +111,7 @@ Return ONLY valid JSON — an array of 3 objects, each with:
 """
 
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=1500,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        text = msg.content[0].text.strip()
+        text = call_llm(system, prompt, model="fast", max_tokens=1500).strip()
         # Strip markdown code fences if present
         if text.startswith("```"):
             text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
@@ -128,7 +125,7 @@ Return ONLY valid JSON — an array of 3 objects, each with:
 # Facebook/Instagram ad generation
 # ---------------------------------------------------------------------------
 
-def generate_meta_ads(client, ad_group: dict) -> list[dict]:
+def generate_meta_ads(ad_group: dict) -> list[dict]:
     """Generate 3 Facebook/Instagram ad variants for an ad group."""
     system = (
         "You are a Facebook/Instagram ad copywriter for Evrnew LLC, a local insulation company "
@@ -163,13 +160,7 @@ Return ONLY valid JSON — an array of 3 objects, each with:
 """
 
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2000,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        text = msg.content[0].text.strip()
+        text = call_llm(system, prompt, model="fast", max_tokens=2000).strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
         return json.loads(text)
@@ -185,7 +176,6 @@ Return ONLY valid JSON — an array of 3 objects, each with:
 def run() -> dict:
     """Run the Ads Agent. Returns summary dict."""
     log(AGENT_NAME, "=== Ads Agent starting ===")
-    client = get_anthropic_client()
 
     timestamp = datetime.now().strftime("%Y-%m-%d-%H%M")
     all_google_ads: list[dict] = []
@@ -195,7 +185,7 @@ def run() -> dict:
     log(AGENT_NAME, "Generating Google Search ads...")
     for ag in AD_GROUPS:
         for city in CITIES[:3]:  # Limit per run to manage API costs
-            variants = generate_google_ads(client, ag, city)
+            variants = generate_google_ads(ag, city)
             if variants:
                 all_google_ads.append({
                     "ad_group": ag["name"],
@@ -208,7 +198,7 @@ def run() -> dict:
     # Meta ads: all ad groups
     log(AGENT_NAME, "Generating Meta (Facebook/Instagram) ads...")
     for ag in AD_GROUPS:
-        variants = generate_meta_ads(client, ag)
+        variants = generate_meta_ads(ag)
         if variants:
             all_meta_ads.append({
                 "ad_group": ag["name"],
@@ -231,6 +221,11 @@ def run() -> dict:
     )
     log(AGENT_NAME, f"Saved Google ads to {google_path}")
     log(AGENT_NAME, f"Saved Meta ads to {meta_path}")
+
+    # Write to Supabase
+    ads_data = {"google": all_google_ads, "meta": all_meta_ads, "timestamp": timestamp}
+    upsert_agent_output(AGENT_NAME, "ad_copy", data=ads_data)
+    log_activity("Agent run", "agent", AGENT_NAME, f"Ad copy generated — Google: {len(all_google_ads)} groups, Meta: {len(all_meta_ads)} groups")
 
     # Telegram
     notify_telegram(

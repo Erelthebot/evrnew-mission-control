@@ -11,10 +11,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.utils import (
-    get_anthropic_client,
+    call_llm,
     get_logger,
     log,
     notify_telegram,
+    notify_sms,
     save_output,
     today_str,
     now_str,
@@ -81,7 +82,7 @@ FAQ_TOPICS = [
 # Landing page generation
 # ---------------------------------------------------------------------------
 
-def generate_landing_page(client, city: str, service: str) -> str:
+def generate_landing_page(city: str, service: str) -> str:
     """Generate landing page copy for a city + service combo."""
     service_name = service.replace("_", " ").title()
 
@@ -111,13 +112,7 @@ Mark each section clearly with ## headings.
 """
 
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2500,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return msg.content[0].text
+        return call_llm(system, prompt, model="reasoning", max_tokens=2500)
     except Exception as exc:
         log(AGENT_NAME, f"Landing page error {city}/{service}: {exc}", "error")
         return f"# Error generating landing page for {city} / {service}\n\n{exc}"
@@ -127,7 +122,7 @@ Mark each section clearly with ## headings.
 # Email sequence generation
 # ---------------------------------------------------------------------------
 
-def generate_email_sequence(client, sequence_key: str, lead_source: str = "organic") -> dict:
+def generate_email_sequence(sequence_key: str, lead_source: str = "organic") -> dict:
     """Generate a single email in a drip sequence."""
     seq = EMAIL_SEQUENCES[sequence_key]
 
@@ -156,13 +151,7 @@ Return as JSON with keys:
 """
 
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2000,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        text = msg.content[0].text.strip()
+        text = call_llm(system, prompt, model="reasoning", max_tokens=2000).strip()
         if text.startswith("```"):
             text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
         return json.loads(text)
@@ -175,7 +164,7 @@ Return as JSON with keys:
 # FAQ content generation
 # ---------------------------------------------------------------------------
 
-def generate_faq_content(client) -> list[dict]:
+def generate_faq_content() -> list[dict]:
     """Generate FAQ entries targeting featured snippet opportunities."""
     system = (
         "You are an SEO content writer for Evrnew LLC. Write FAQ answers optimized for "
@@ -197,13 +186,7 @@ Return JSON with:
 - schema_faq_entry: str (JSON-LD FAQPage schema for this single Q&A)
 """
         try:
-            msg = client.messages.create(
-                model="claude-haiku-4-5-20251001",  # Haiku for cost efficiency on bulk FAQ
-                max_tokens=600,
-                system=system,
-                messages=[{"role": "user", "content": prompt}],
-            )
-            text = msg.content[0].text.strip()
+            text = call_llm(system, prompt, model="fast", max_tokens=600).strip()
             if text.startswith("```"):
                 text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
             faqs.append(json.loads(text))
@@ -217,7 +200,7 @@ Return JSON with:
 # Service page copy
 # ---------------------------------------------------------------------------
 
-def generate_service_page(client, service: str) -> str:
+def generate_service_page(service: str) -> str:
     """Generate full service page copy for the website."""
     service_name = service.replace("_", " ").title()
     system = (
@@ -234,13 +217,7 @@ Output: Markdown with clear section headings
 Include: H1, intro paragraph, 3-4 H2 sections, FAQ (3 questions), CTA
 """
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2000,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return msg.content[0].text
+        return call_llm(system, prompt, model="reasoning", max_tokens=2000)
     except Exception as exc:
         log(AGENT_NAME, f"Service page error {service}: {exc}", "error")
         return f"# Error: {service}\n{exc}"
@@ -253,7 +230,6 @@ Include: H1, intro paragraph, 3-4 H2 sections, FAQ (3 questions), CTA
 def run() -> dict:
     """Run the Content Agent. Returns summary of content generated."""
     log(AGENT_NAME, "=== Content Agent starting ===")
-    client = get_anthropic_client()
     summary: dict = {"landing_pages": [], "emails": [], "faqs": 0, "service_pages": []}
 
     # 1. Landing pages: 2 cities per run, rotating through services
@@ -263,7 +239,7 @@ def run() -> dict:
 
     for city in cities_today:
         log(AGENT_NAME, f"Generating landing page: {city} / {service_today}")
-        copy = generate_landing_page(client, city, service_today)
+        copy = generate_landing_page(city, service_today)
         slug = f"{city.lower().replace(' ', '-')}-{service_today.replace('_', '-')}"
         filename = f"landing-{slug}-{today_str()}.md"
         path = save_output(AGENT_NAME, filename, copy)
@@ -275,7 +251,7 @@ def run() -> dict:
     email_data: dict = {}
     for seq_key in list(EMAIL_SEQUENCES.keys())[:2]:  # 2 per day
         log(AGENT_NAME, f"  Email: {seq_key}")
-        email = generate_email_sequence(client, seq_key, "google_ads")
+        email = generate_email_sequence(seq_key, "google_ads")
         email_data[seq_key] = email
         summary["emails"].append(seq_key)
 
@@ -283,17 +259,17 @@ def run() -> dict:
     log(AGENT_NAME, f"  Saved emails to {email_path}")
 
     # 3. FAQ content (once per week — check if today's file exists)
-    faq_file = Path(f"/Users/erel/evrnew-marketing/data/content/faq-{today_str()}.json")
+    faq_file = Path.home() / f"evrnew-marketing/data/content/faq-{today_str()}.json"
     if not faq_file.exists() and day_of_week == 0:  # Mondays only
         log(AGENT_NAME, "Generating FAQ content...")
-        faqs = generate_faq_content(client)
+        faqs = generate_faq_content()
         save_output(AGENT_NAME, f"faq-{today_str()}.json", json.dumps(faqs, indent=2))
         summary["faqs"] = len(faqs)
         log(AGENT_NAME, f"  Generated {len(faqs)} FAQ entries")
 
     # 4. Service pages (one per day, rotating)
     log(AGENT_NAME, f"Generating service page: {service_today}")
-    service_copy = generate_service_page(client, service_today)
+    service_copy = generate_service_page(service_today)
     service_filename = f"service-{service_today.replace('_', '-')}-{today_str()}.md"
     service_path = save_output(AGENT_NAME, service_filename, service_copy)
     summary["service_pages"].append({"service": service_today, "file": str(service_path)})

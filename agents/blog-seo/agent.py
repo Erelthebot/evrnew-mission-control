@@ -16,10 +16,11 @@ import httpx
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from shared.utils import (
-    get_anthropic_client,
+    call_llm,
     get_logger,
     log,
     notify_telegram,
+    notify_sms,
     save_output,
     today_str,
     now_str,
@@ -27,6 +28,66 @@ from shared.utils import (
 
 AGENT_NAME = "blog-seo"
 logger = get_logger(AGENT_NAME)
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from shared import ghl_tool
+
+
+def publish_to_ghl(post: dict) -> str | None:
+    """Publish blog post to GHL as DRAFT via ghl_tool. Returns post ID or None."""
+    import re
+    content = post.get("content", "")
+
+    def fm(key):
+        m = re.search(rf'^{key}:\s*"([^"]+)"', content, re.MULTILINE)
+        return m.group(1) if m else ""
+
+    title    = fm("title") or post.get("title", "Untitled")
+    meta_desc = fm("meta_description")
+    slug     = fm("slug") or re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+
+    parts   = content.split("---\n")
+    body_md = parts[2].strip() if len(parts) >= 3 else content
+
+    # Markdown → HTML
+    text = body_md
+    text = re.sub(r"^## (.+)$",  r"<h2>\1</h2>", text, flags=re.MULTILINE)
+    text = re.sub(r"^### (.+)$", r"<h3>\1</h3>", text, flags=re.MULTILINE)
+    text = re.sub(r"^# (.+)$",   r"<h1>\1</h1>", text, flags=re.MULTILINE)
+    text = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", text)
+    lines = text.split("\n")
+    out, in_list = [], False
+    for line in lines:
+        if line.startswith("- "):
+            if not in_list:
+                out.append("<ul>")
+                in_list = True
+            out.append(f"<li>{line[2:]}</li>")
+        else:
+            if in_list:
+                out.append("</ul>")
+                in_list = False
+            if line.strip() and not line.startswith("<"):
+                out.append(f"<p>{line}</p>")
+            else:
+                out.append(line)
+    if in_list:
+        out.append("</ul>")
+    html_body = "\n".join(out)
+
+    result = ghl_tool.create_blog_post(
+        title=title,
+        html_body=html_body,
+        slug=slug,
+        meta_description=meta_desc,
+        status="DRAFT",
+    )
+    if result:
+        post_id = result.get("id", "")
+        log(AGENT_NAME, f"GHL draft created: {post_id} | {title}")
+        return post_id
+    log(AGENT_NAME, f"GHL publish failed for: {title}", "error")
+    return None
 
 BLOG_TOPICS = [
     {
@@ -127,7 +188,7 @@ def research_keywords(seed_keyword: str, city: str | None) -> list[dict]:
 # Blog post generation
 # ---------------------------------------------------------------------------
 
-def generate_blog_post(client, topic: dict, keyword_data: list[dict]) -> dict:
+def generate_blog_post(topic: dict, keyword_data: list[dict]) -> dict:
     """Generate a full SEO blog post with frontmatter."""
     city = topic.get("city")
     title = topic["title_template"].format(city=city) if city else topic["title_template"].replace(" in {city}", "").replace(" {city}", "")
@@ -180,13 +241,7 @@ schema_recommendations: "..."
 """
 
     try:
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=3000,
-            system=system,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        content = msg.content[0].text
+        content = call_llm(system, prompt, model="reasoning", max_tokens=3000)
         return {
             "title": title,
             "target_keyword": target_kw,
@@ -207,7 +262,6 @@ schema_recommendations: "..."
 def run() -> list[dict]:
     """Run the Blog & SEO Agent. Returns list of generated post metadata."""
     log(AGENT_NAME, "=== Blog & SEO Agent starting ===")
-    client = get_anthropic_client()
 
     # Run 2 posts per execution (Mon/Thu cadence = ~8/month)
     topics_to_run = BLOG_TOPICS[:2]
@@ -220,7 +274,7 @@ def run() -> list[dict]:
         keyword_data = research_keywords(seed_kw, city)
 
         log(AGENT_NAME, f"Generating blog post: {topic['title_template']}")
-        post = generate_blog_post(client, topic, keyword_data)
+        post = generate_blog_post(topic, keyword_data)
 
         if "content" in post:
             city_slug = city.lower().replace(" ", "-") if city else "washington"
@@ -228,6 +282,9 @@ def run() -> list[dict]:
             path = save_output(AGENT_NAME, filename, post["content"])
             post["file_path"] = str(path)
             log(AGENT_NAME, f"Saved: {path}")
+            # Auto-publish to GHL as draft
+            ghl_id = publish_to_ghl(post)
+            post["ghl_post_id"] = ghl_id
             results.append(post)
 
     # Save metadata index

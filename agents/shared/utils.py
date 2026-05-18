@@ -173,27 +173,44 @@ def get_xai_client():
 
 
 def get_ollama_client():
-    """Return an OpenAI-compatible client pointed at local Ollama. PRIMARY model."""
+    """Return an OpenAI-compatible client pointed at local llama-server (port 8080)."""
     from openai import OpenAI  # type: ignore
-    return OpenAI(api_key="ollama", base_url="http://127.0.0.1:11434/v1")
+    return OpenAI(api_key="local", base_url="http://127.0.0.1:8080/v1")
 
 
-def get_claude_client():
-    """Return an Anthropic client for Claude Sonnet 4.5. Strategic/brand voice tier."""
-    import anthropic  # type: ignore
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+def _load_llm_config() -> dict:
+    cfg_path = PROJECT_ROOT / "config" / "llm-config.json"
+    if cfg_path.exists():
+        return json.loads(cfg_path.read_text(encoding="utf-8"))
+    return {}
+
+
+def get_openrouter_client():
+    """Return an OpenAI-compatible client for DeepSeek-V4-Flash via OpenRouter."""
+    from openai import OpenAI  # type: ignore
+    cfg = _load_llm_config().get("reasoning", {})
+    api_key = os.environ.get(cfg.get("env_key", "OPENROUTER_API_KEY"))
     if not api_key:
-        raise EnvironmentError("ANTHROPIC_API_KEY not set")
-    return anthropic.Anthropic(api_key=api_key)
+        raise EnvironmentError("OPENROUTER_API_KEY not set")
+    return OpenAI(api_key=api_key, base_url=cfg.get("base_url", "https://openrouter.ai/api/v1"))
+
+
+def get_overflow_client():
+    """Return an OpenAI-compatible client for MLX Llama-3.3-70B-Instruct-4bit (port 52416)."""
+    from openai import OpenAI  # type: ignore
+    cfg = _load_llm_config().get("overflow", {})
+    port = cfg.get("port", 52416)
+    return OpenAI(api_key="local", base_url=f"http://127.0.0.1:{port}/v1")
 
 
 def get_primary_client():
-    """Returns (client, model) using local Qwen via Ollama."""
-    return get_ollama_client(), "qwen3.5:35b"
+    """Returns (client, model) using local Holo3-35B-A3B via llama-server (port 8080)."""
+    cfg = _load_llm_config().get("local", {})
+    return get_ollama_client(), cfg.get("model_id", "Holo3-35B-A3B")
 
 
 def call_consensus(question: str) -> dict:
-    """Run the multi-LLM consensus engine (Qwen + Claude Haiku + Grok → Sonnet synthesis).
+    """Run the multi-LLM consensus engine (Holo3 + Grok-3 + DeepSeek-V4-Flash → V4-Flash synthesis).
     Returns {question, panel, consensus}. Sync wrapper around the async engine."""
     import asyncio
     import importlib.util
@@ -208,58 +225,98 @@ def call_llm(
     user: str,
     model: str = "local",
     max_tokens: int = 2000,
+    thinking: bool = False,
 ) -> str:
     """
-    Tiered LLM routing:
-      local / grok-3 / grok-3-fast  → Qwen3.5:35b via Ollama (~80% of calls)
-      claude / claude-sonnet-4-5     → Claude Sonnet 4.5 (brand voice, strategy)
-      grok / grok-3        → Grok 3 via xAI (fallback-of-fallback)
+    Tiered LLM routing via config/llm-config.json route names:
+      local      → Holo3-35B-A3B (vision / GUI, port 8080)
+      fast       → Grok-3 (primary chat, copy, ads)
+      reasoning  → DeepSeek-V4-Flash via OpenRouter (non-thinking default)
+      overflow   → Llama-3.3-70B-Instruct-4bit via MLX :52416
+      hub        → DeepSeek-V4-Flash (orchestration)
 
-    On Ollama failure, automatically falls back to Claude then Grok.
+    Legacy aliases: gemini/gemini-pro → reasoning; grok/grok-3/grok-3-fast → fast.
     """
-    _STRATEGIC = {"claude", "claude-sonnet-4-5", "claude-sonnet"}
-    _FALLBACK   = {"grok", "grok-3", "grok-3-fast"}
-
+    cfg = _load_llm_config()
     msgs = [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
-    if model in _STRATEGIC:
-        import anthropic as _anthropic  # type: ignore
-        client = get_claude_client()
-        resp = client.messages.create(
-            model="claude-sonnet-4-5",
-            max_tokens=max_tokens,
-            system=system,
-            messages=[{"role": "user", "content": user}],
-        )
-        return resp.content[0].text
+    route = model
+    if route in {"gemini", "gemini-pro"}:
+        route = "reasoning"
+    if route in {"grok", "grok-3", "grok-3-fast"}:
+        route = "fast"
 
-    if model in _FALLBACK:
+    fast_model = cfg.get("fast", {}).get("model", "grok-3")
+    reasoning_model = cfg.get("reasoning", {}).get("model", "deepseek/deepseek-v4-flash")
+    overflow_model = cfg.get("overflow", {}).get("model", "Llama-3.3-70B-Instruct-4bit")
+    local_model = cfg.get("local", {}).get("model_id", "Holo3-35B-A3B")
+
+    extra = {"extra_body": {"reasoning": {"enabled": True}}} if thinking else {}
+
+    if route in {"reasoning", "hub"}:
+        for attempt in range(3):
+            try:
+                import time
+                if attempt > 0:
+                    time.sleep(2 ** attempt)
+                client = get_openrouter_client()
+                resp = client.chat.completions.create(
+                    model=reasoning_model,
+                    max_tokens=max_tokens,
+                    messages=msgs,
+                    **extra,
+                )
+                return (resp.choices[0].message.content or "")
+            except Exception as exc:
+                is_503 = getattr(exc, "status_code", None) == 503 or "503" in str(exc)
+                if is_503 and attempt < 2:
+                    continue
         client = get_xai_client()
-        resp = client.chat.completions.create(model="grok-3", max_tokens=max_tokens, messages=msgs)
-        return resp.choices[0].message.content
+        resp = client.chat.completions.create(model=fast_model, max_tokens=max_tokens, messages=msgs)
+        return (resp.choices[0].message.content or "")
 
-    # Default: local Qwen with fallback chain
+    if route == "fast":
+        client = get_xai_client()
+        resp = client.chat.completions.create(model=fast_model, max_tokens=max_tokens, messages=msgs)
+        return (resp.choices[0].message.content or "")
+
+    if route == "overflow":
+        try:
+            client = get_overflow_client()
+            resp = client.chat.completions.create(model=overflow_model, max_tokens=max_tokens, messages=msgs)
+            return (resp.choices[0].message.content or "")
+        except Exception:
+            pass
+        client = get_xai_client()
+        resp = client.chat.completions.create(model=fast_model, max_tokens=max_tokens, messages=msgs)
+        return (resp.choices[0].message.content or "")
+
+    # Default: local Holo3 with fallback chain
     try:
         client = get_ollama_client()
-        resp = client.chat.completions.create(model="qwen3.5:35b", max_tokens=max_tokens, messages=msgs)
-        return resp.choices[0].message.content
+        resp = client.chat.completions.create(model=local_model, max_tokens=max_tokens, messages=msgs)
+        return (resp.choices[0].message.content or "")
     except Exception:
         pass
     try:
-        import anthropic as _anthropic  # type: ignore
-        client = get_claude_client()
-        resp = client.messages.create(
-            model="claude-sonnet-4-5",
+        client = get_openrouter_client()
+        resp = client.chat.completions.create(
+            model=reasoning_model,
             max_tokens=max_tokens,
-            system=system,
-            messages=[{"role": "user", "content": user}],
+            messages=msgs,
         )
-        return resp.content[0].text
+        return (resp.choices[0].message.content or "")
+    except Exception:
+        pass
+    try:
+        client = get_overflow_client()
+        resp = client.chat.completions.create(model=overflow_model, max_tokens=max_tokens, messages=msgs)
+        return (resp.choices[0].message.content or "")
     except Exception:
         pass
     client = get_xai_client()
-    resp = client.chat.completions.create(model="grok-3", max_tokens=max_tokens, messages=msgs)
-    return resp.choices[0].message.content
+    resp = client.chat.completions.create(model=fast_model, max_tokens=max_tokens, messages=msgs)
+    return (resp.choices[0].message.content or "")
 
 
 # ---------------------------------------------------------------------------
