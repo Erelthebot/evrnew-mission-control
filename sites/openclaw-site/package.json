@@ -4,17 +4,22 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "node scripts/generate-live-data.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.9.0",
+    "@supabase/supabase-js": "^2.99.1",
     "lucide-react": "^0.469.0",
     "next": "^15.1.0",
     "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "react-dom": "^18.3.0",
+    "recharts": "^3.8.0"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.15.8",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

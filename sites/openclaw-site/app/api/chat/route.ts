@@ -24,19 +24,24 @@ async function chatXAI(messages: object[]): Promise<string> {
   return d.choices[0].message.content
 }
 
-async function chatGemini(messages: object[]): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY
-  if (!apiKey) throw new Error('GEMINI_API_KEY not set')
-  const r = await fetch('https://generativelanguage.googleapis.com/v1beta/openai/chat/completions', {
+async function chatReasoning(messages: object[]): Promise<string> {
+  const apiKey = process.env.OPENROUTER_API_KEY
+  if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${apiKey}`,
+      'HTTP-Referer': 'https://openclaw.evrnew.com',
+      'X-Title': 'OpenClaw Site',
+    },
     body: JSON.stringify({
-      model: 'gemini-2.0-pro-exp',
+      model: 'deepseek/deepseek-v4-flash',
       max_tokens: 500,
       messages: [{ role: 'system', content: SYSTEM }, ...messages],
     }),
   })
-  if (!r.ok) throw new Error(`Gemini ${r.status}`)
+  if (!r.ok) throw new Error(`OpenRouter ${r.status}`)
   const d = await r.json()
   return d.choices[0].message.content
 }
@@ -44,13 +49,13 @@ async function chatGemini(messages: object[]): Promise<string> {
 export async function POST(req: NextRequest) {
   const { messages } = await req.json()
 
-  // xAI primary — Gemini fallback if xAI is down
+  // Grok-3 primary — DeepSeek-V4-Flash fallback if xAI is down
   try {
     const reply = await chatXAI(messages)
     return NextResponse.json({ reply })
   } catch {
     try {
-      const reply = await chatGemini(messages)
+      const reply = await chatReasoning(messages)
       return NextResponse.json({ reply })
     } catch (err) {
       return NextResponse.json({ error: String(err) }, { status: 500 })

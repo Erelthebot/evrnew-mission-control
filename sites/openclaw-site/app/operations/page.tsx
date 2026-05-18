@@ -111,7 +111,7 @@ const agents = [
     plist: 'com.evrnew.agent-image',
     status: 'active',
     schedule: 'On-demand / batch',
-    llm: 'gemini-flash-image',
+    llm: 'image (gemini-3.1-flash-image-preview)',
     lastRun: 'On-demand',
     description: 'Generates creative marketing images using Gemini 3.1 Flash Image Preview. Called by social/ads agents or directly via CLI/Telegram with a prompt or batch brief.',
     tools: ['Gemini API', 'Gemini', 'Telegram'],
