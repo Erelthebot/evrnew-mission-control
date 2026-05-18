@@ -2,6 +2,7 @@
 .env
 *.env
 .envrc
+EREL_MEMORY.md
 config/gmail/
 logs/
 

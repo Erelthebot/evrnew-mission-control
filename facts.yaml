@@ -1,0 +1,120 @@
+credentials_status:
+  Brave Search: ok
+  Cloudflare: ok
+  DataForSEO: error
+  GHL: ok
+  OpenRouter: ok
+  GitHub: ok
+  Supabase: error
+  Twilio: error
+  XAI/Grok: ok
+models:
+  fast: grok-3 (xAI, pinned)
+  reasoning: deepseek/deepseek-v4-flash (OpenRouter)
+  overflow: Llama-3.3-70B-Instruct-4bit (MLX :52416)
+  vision: Holo3-35B-A3B (llama-server :8080)
+  primary: 'Holo3 (local) + Grok-3 analytical + DeepSeek-V4-Flash reasoning, synthesized
+    by V4-Flash thinking mode. Fallback: reasoning→Grok-3→MLX overflow.'
+open_issues: []
+paths:
+  .env: ~/.hermes/.env
+  .env.memory: ~/Projects/OpenClaw/.env.memory
+  Application: ~/Library/Application
+  Holo3-35B-A3B.Q4_K_M.gguf: ~/models/Holo3-35B-A3B.Q4_K_M.gguf
+  Obsidian: ~/Documents/Obsidian
+  Qwen3-30B-A3B-Q4_K_M.gguf: ~/models/Qwen3-30B-A3B-Q4_K_M.gguf
+  Qwen_Qwen3.5-27B-Q4_K_M.gguf: ~/models/Qwen_Qwen3.5-27B-Q4_K_M.gguf
+  SOUL.md: ~/.hermes/SOUL.md
+  ai.openclaw.gateway.plist: /Library/LaunchDaemons/ai.openclaw.gateway.plist
+  auth: /api/auth
+  autoheal-hermes.sh: ~/evrnew-marketing/scripts/autoheal-hermes.sh
+  autoheal-openclaw.sh: ~/evrnew-marketing/scripts/autoheal-openclaw.sh
+  com.erel.mlx-cluster-proxy.plist: ~/Library/LaunchAgents/com.erel.mlx-cluster-proxy.plist
+  com.erel.mlx-server.plist: ~/Library/LaunchAgents/com.erel.mlx-server.plist
+  com.evrnew.mission-control.plist.disabled: ~/Library/LaunchAgents/com.evrnew.mission-control.plist.disabled
+  config: ~/.ssh/config
+  config.yaml: ~/.hermes/config.yaml
+  config.yml: ~/.cloudflared/config.yml
+  credentials.json: ~/.config/moltbook/credentials.json
+  evrnew: /etc/pf.anchors/evrnew
+  extension: /Users/erel_master/Projects/OpenClaw/extension
+  ghl: /api/ghl
+  ghl-dashboard.json: ~/evrnew-marketing/data/ghl-dashboard.json
+  hermes: ~/.hermes/hermes-agent/venv/bin/hermes
+  home: /api/v1/home
+  id_worker: ~/.ssh/id_worker
+  jobs.json: ~/.openclaw/cron/jobs.json
+  llm-config.json: ~/evrnew-marketing/config/llm-config.json
+  log-digest.sh: ~/evrnew-marketing/scripts/log-digest.sh
+  mlx-cluster-proxy.py: ~/evrnew-marketing/scripts/mlx-cluster-proxy.py
+  mlx-cluster.log: /tmp/mlx-cluster.log
+  mlx-server.error.log: ~/.mlx-server/logs/mlx-server.error.log
+  mlx-server.log: ~/.mlx-server/logs/mlx-server.log
+  mlx-worker.log: /tmp/mlx-worker.log
+  models--mlx-community--Llama-3.3-70B-Instruct-4bit: ~/.cache/huggingface/hub/models--mlx-community--Llama-3.3-70B-Instruct-4bit/
+  moltbook_heartbeat.py: ~/evrnew-marketing/scripts/moltbook_heartbeat.py
+  ollama: /opt/homebrew/bin/ollama
+  openclaw-site: ~/evrnew-marketing/sites/openclaw-site/
+  pf.conf: /etc/pf.conf
+  sessions.json: ~/.openclaw/agents/main/sessions/sessions.json
+  update-llm-config.sh: ~/evrnew-marketing/scripts/update-llm-config.sh
+  webhook: /webhook/
+  webhooks: /webhooks/
+  '{locationId}': /webhook/{locationId}
+people:
+  johnny_walker:
+    name: Johnny Walker
+    telegram_id: '8733921180'
+  spencer_michael:
+    name: Spencer Michael
+    telegram_id: '8688596596'
+ports:
+  '### erel_master backend (': 52416
+  '- **Memory note**: Qwen3-30B-A3B on llama-server (': 8080
+  '- **STATUS: RUNNING** —': 8080
+  '- **Telegram filter proxy**: `com.evrnew.telegram-filter` (': 18799
+  '- Binds to all interfaces but pf blocks external access (': 5678
+  '- Fallback: MLX overflow (': 52416
+  '- LaunchAgent: `com.evrnew.webhook-receiver`': 8766
+  '- LaunchDaemon: `ai.openclaw.gateway` (SYSTEM domain': 18789
+  '- Port: 18792': 18792
+  '- Port: 5678': 5678
+  '- `Agent-Shared/logs/mission-control-YYYY-MM-DD.md` —': 3003
+  '- `pass in quick on en1 proto tcp to any': 52415
+  --host 0.0.0.0: 8080
+  browser_relay: 18792
+  mission_control: 3003
+  n8n: 5678
+  ollama_embeddings: 11435
+  openclaw_gateway: 18789
+services:
+  cloudflare_tunnel:
+    last_verified: '2026-04-18'
+  erel_evrnew_com:
+    url: https://erel.evrnew.com/webhook/ghl`
+  ghl_(gohighlevel):
+    last_verified: '2026-04-12'
+  hermes_agent:
+    last_verified: '2026-04-17'
+  local_llm_—_llama.cpp_server_/_llama-server_(running_—_holo3-35b-a3b,_standalone):
+    last_verified: '2026-05-18'
+  local_llm_—_ollama_(embeddings_only):
+    last_verified: '2026-04-09'
+  mission_control:
+    last_verified: '2026-04-18'
+  mlx_cluster_(running_—_2-node,_erel_master_+_erel_worker):
+    last_verified: '2026-04-21'
+  moltbook_heartbeat:
+    last_verified: '2026-03-27'
+  n8n:
+    last_verified: '2026-04-07'
+  openclaw_browser_relay:
+    last_verified: '2026-03-26'
+  openclaw_cron_jobs:
+    last_verified: '2026-04-11'
+  openclaw_gateway:
+    last_verified: '2026-03-27'
+  openrouter_(hub):
+    last_verified: '2026-04-11'
+  packet_filter_(pf):
+    last_verified: '2026-04-15'
