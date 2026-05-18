@@ -28,7 +28,7 @@ Shared utils: ~/evrnew-marketing/agents/shared/utils.py
   - Facebook: educational/trust-building (attic insulation, crawl space, spray foam topics)
   - Instagram: visual-friendly captions with hashtags
   - Google Business: short service updates/offers
-- Call Gemini Pro (via call_llm with model="gemini") for generation
+- Call Grok-3 (via call_llm with model="fast") for generation
 - Output: Save to ~/evrnew-marketing/data/social/YYYY-MM-DD-posts.json
 - Notify via Telegram when done
 - Follow the same pattern as the other agents
@@ -52,7 +52,7 @@ Shared utils: ~/evrnew-marketing/agents/shared/utils.py
   - Commercial/spray foam inquiry
   - Post-estimate follow-up
   - Rebate education series
-- Call Gemini Pro (via call_llm with model="gemini")
+- Call Grok-3 (via call_llm with model="fast")
 - Output: Save to ~/evrnew-marketing/data/email-drip/YYYY-MM-DD-sequences.json
 - Notify via Telegram when done
 

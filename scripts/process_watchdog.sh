@@ -29,16 +29,16 @@ echo "[$TIMESTAMP] --- watchdog run ---" >> "$LOG"
 # ── Load env ────────────────────────────────────────────────────
 [ -f "$HOME/evrnew-marketing/.env" ] && { set -a; source "$HOME/evrnew-marketing/.env"; set +a; }
 
-# ── Check Gemini API key health ─────────────────────────────────
-GEMINI_API_KEY="${GEMINI_API_KEY:-}"
-if [ -n "$GEMINI_API_KEY" ]; then
+# ── Check xAI (Grok-3 primary) ──────────────────────────────────
+XAI_API_KEY="${XAI_API_KEY:-}"
+if [ -n "$XAI_API_KEY" ]; then
   HTTP=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
-    -H "Authorization: Bearer ${GEMINI_API_KEY}" \
-    "https://generativelanguage.googleapis.com/v1beta/openai/models")
+    -H "Authorization: Bearer ${XAI_API_KEY}" \
+    "https://api.x.ai/v1/models")
   if [ "$HTTP" = "200" ]; then
-    echo "[$TIMESTAMP]   OK  gemini-api (HTTP 200)" >> "$LOG"
+    echo "[$TIMESTAMP]   OK  xai-api (HTTP 200)" >> "$LOG"
   else
-    echo "[$TIMESTAMP]  WARN gemini-api returned HTTP $HTTP" >> "$LOG"
+    echo "[$TIMESTAMP]  WARN xai-api returned HTTP $HTTP" >> "$LOG"
     CRITICAL_FAILURES=$((CRITICAL_FAILURES+1))
   fi
 fi

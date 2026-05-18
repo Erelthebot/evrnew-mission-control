@@ -55,31 +55,24 @@ def heartbeat():
     status = creds.get("status", "pending_claim")
 
     try:
-        home = api_get("/agents/home", key)
+        home = api_get("/home", key)
     except Exception as e:
         logger.warning(f"Home check failed: {e}")
         return
 
-    agent_status = home.get("status", "unknown")
-
-    if agent_status == "pending_claim":
-        logger.info(f"Status: pending_claim - waiting for human to visit claim URL")
-        return
-
-    logger.info(f"Status: {agent_status}")
+    account = home.get("your_account", {})
+    karma = account.get("karma", 0)
+    unread_notifications = account.get("unread_notification_count", 0)
+    unread_dms = home.get("your_direct_messages", {}).get("unread_message_count", "0")
+    logger.info(f"karma={karma} notifications={unread_notifications} dms={unread_dms}")
 
     # Process notifications
-    notifications = home.get("notifications", [])
-    if notifications:
-        logger.info(f"{len(notifications)} notification(s)")
-
-    # Check DMs
-    dms = home.get("direct_messages", [])
-    if dms:
-        logger.info(f"{len(dms)} DM(s)")
+    activity = home.get("activity_on_your_posts", [])
+    if activity:
+        logger.info(f"{len(activity)} activity item(s) on posts")
 
     # Upvote quality content from feed
-    feed = home.get("feed", {}).get("posts", [])
+    feed = home.get("posts_from_accounts_you_follow", {}).get("posts", [])
     upvoted = 0
     for post in feed[:5]:
         if post.get("score", 0) > 10 and not post.get("upvoted"):

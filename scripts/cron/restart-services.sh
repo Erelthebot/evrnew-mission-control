@@ -1,5 +1,5 @@
 #!/bin/bash
-# restart-services.sh [all|inbox|ollama|n8n|openclaw]
+# restart-services.sh [all|inbox|llama-server|n8n|openclaw]
 SERVICE="${1:-all}"
 LOG="$HOME/evrnew-marketing/logs/maintenance.log"
 TS=$(date '+%Y-%m-%d %H:%M:%S')
@@ -14,10 +14,9 @@ restart_openclaw() {
   launchctl kickstart -k gui/$(id -u)/ai.openclaw.gateway >> "$LOG" 2>&1
 }
 
-restart_ollama() {
-  echo "[$TS] Restarting Ollama..." >> "$LOG"
-  pkill ollama 2>/dev/null; sleep 2
-  nohup ollama serve >> "$LOG" 2>&1 &
+restart_llama_server() {
+  echo "[$TS] Restarting llama-server..." >> "$LOG"
+  sudo launchctl kickstart -k system/com.evrnew.llama-server >> "$LOG" 2>&1
 }
 
 restart_n8n() {
@@ -27,11 +26,11 @@ restart_n8n() {
 }
 
 case "$SERVICE" in
-  all)     restart_inbox; restart_openclaw; restart_ollama; restart_n8n ;;
-  inbox)   restart_inbox ;;
-  openclaw) restart_openclaw ;;
-  ollama)  restart_ollama ;;
-  n8n)     restart_n8n ;;
-  *)       echo "Usage: $0 [all|inbox|openclaw|ollama|n8n]" ;;
+  all)          restart_inbox; restart_openclaw; restart_llama_server; restart_n8n ;;
+  inbox)        restart_inbox ;;
+  openclaw)     restart_openclaw ;;
+  llama-server) restart_llama_server ;;
+  n8n)          restart_n8n ;;
+  *)            echo "Usage: $0 [all|inbox|openclaw|llama-server|n8n]" ;;
 esac
 echo "[$TS] Service restart complete: $SERVICE" >> "$LOG"

@@ -17,13 +17,13 @@ if ! curl -sf http://localhost:3003/api/gateway-health > /dev/null 2>&1; then
   curl -sf http://localhost:3003/api/gateway-health > /dev/null 2>&1 && log "FIXED: Next.js" || alert "Next.js FAILED to restart"
 fi
 
-# 2. Ollama LLM
-if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
-  log "FIXING: Ollama down"
+# 2. Ollama embeddings (:11435, nomic-embed-text)
+if ! curl -sf http://127.0.0.1:11435/api/tags > /dev/null 2>&1; then
+  log "FIXING: Ollama embeddings down"
   pkill -9 ollama
-  nohup ollama serve > /tmp/ollama.log 2>&1 &
+  OLLAMA_HOST=127.0.0.1:11435 nohup ollama serve > /tmp/ollama-embed.log 2>&1 &
   sleep 5
-  curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && log "FIXED: Ollama" || alert "Ollama FAILED - check GPU"
+  curl -sf http://127.0.0.1:11435/api/tags > /dev/null 2>&1 && log "FIXED: Ollama :11435" || alert "Ollama embeddings FAILED"
 fi
 
 # 3. Gateway
@@ -67,9 +67,10 @@ if ! pgrep -f "cloudflared tunnel" > /dev/null; then
 fi
 
 # 8. erel.evrnew.com public access
-HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://erel.evrnew.com 2>/dev/null)
+# Check /auth (public) endpoint -- 307 on root is expected auth middleware redirect
+HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://erel.evrnew.com/auth 2>/dev/null)
 if [ "$HTTP_CODE" != "200" ]; then
-  log "WARN: erel.evrnew.com returns $HTTP_CODE"
+  log "WARN: erel.evrnew.com/auth returns $HTTP_CODE (site may be down)"
 fi
 
 # Log rotation

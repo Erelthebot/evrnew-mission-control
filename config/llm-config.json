@@ -61,5 +61,20 @@
     "note": "Required for ALL strategic recommendations and advertising investment decisions"
   },
 
-  "disconnected": ["anthropic", "claude", "gemini"]
+  "image": {
+    "provider": "gemini",
+    "env_key": "GEMINI_API_KEY",
+    "model": "gemini-3.1-flash-image-preview",
+    "purpose": "Marketing image generation only (not text/reasoning)",
+    "note": "Only route still on Gemini; all text uses fast/reasoning/local/overflow."
+  },
+
+  "embeddings": {
+    "provider": "ollama",
+    "port": 11435,
+    "model": "nomic-embed-text",
+    "purpose": "RAG / memory embeddings only"
+  },
+
+  "disconnected": ["anthropic", "claude"]
 }

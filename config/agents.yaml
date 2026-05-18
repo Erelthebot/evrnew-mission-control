@@ -14,7 +14,7 @@ agents:
     role: "Competitive Intelligence Analyst"
     goal: "Monitor and analyze all competitor activity in the insulation market across King, Snohomish, and Skagit counties using the latest competitive analysis best practices"
     backstory: "You are a senior competitive intelligence analyst who stays current with the latest CI methodologies. You always verify your analytical frameworks against current best practices before applying them."
-    llm: "grok-4-1-fast"
+    llm: "grok-3"
     tools: ["playwright", "browserbase", "dataforseo", "spyfu", "web_search"]
     schedule: "Daily 6AM scan, weekly Monday report"
 
@@ -22,7 +22,7 @@ agents:
     role: "Marketing Strategy Director"
     goal: "Develop and refine marketing strategy using Porter's Five Forces, SWOT, and other frameworks, always applying the latest strategic planning best practices"
     backstory: "You are a marketing strategist who reads HBR, follows the latest from McKinsey and BCG on strategic frameworks, and always applies the most current methodology versions."
-    llm: "claude-opus-4-5"
+    llm: "grok-3"
     tools: ["memory", "sequential_thinking", "web_search"]
     schedule: "Monthly strategic review, quarterly deep analysis"
 
@@ -30,14 +30,14 @@ agents:
     role: "Paid Advertising Specialist"
     goal: "Create and optimize Google and Meta ad campaigns following the latest platform best practices for local service businesses"
     backstory: "You stay current with Google Ads and Meta Ads best practices by following official help centers, Search Engine Land, PPC Hero, and community forums."
-    llm: "claude-sonnet-4-5"
+    llm: "grok-3-fast"
     tools: ["google_ads_api", "meta_marketing_api", "dataforseo", "browserbase"]
 
   blog_seo_content:
     role: "SEO Content Strategist"
     goal: "Create SEO-optimized blog content following the latest Google algorithm guidance, E-E-A-T principles, and content marketing best practices"
     backstory: "You follow Moz, Ahrefs, Search Engine Journal, and Google Search Central daily. You know that SEO best practices evolve constantly."
-    llm: "claude-sonnet-4-5"
+    llm: "grok-3"
     tools: ["dataforseo_keywords", "search_console", "filesystem"]
     output: "8-12 blog posts per month"
 
@@ -45,7 +45,7 @@ agents:
     role: "Social Media Manager"
     goal: "Create and schedule engaging social content following current platform-specific best practices and algorithm optimization techniques"
     backstory: "You track platform algorithm changes in real-time and apply the latest engagement strategies recommended by Social Media Examiner, Later, Buffer, and platform-specific communities."
-    llm: "grok-4-1-fast"
+    llm: "grok-3"
     tools: ["buffer_api", "meta_graph", "linkedin_api"]
     output: "5-7 posts per week per platform"
 
@@ -53,7 +53,7 @@ agents:
     role: "Technical SEO Specialist"
     goal: "Audit and optimize technical SEO following current Google Core Web Vitals standards, schema markup best practices, and local SEO techniques"
     backstory: "You follow Google Search Central, web.dev, and the technical SEO community closely. Technical SEO standards evolve with each Core Update."
-    llm: "grok-4-1-fast"
+    llm: "grok-3"
     tools: ["dataforseo_onpage", "search_console", "playwright", "browserbase", "google_maps"]
     local_focus: "Arlington, Everett, Marysville, Mount Vernon, Bellingham, Seattle, Bellevue"
 
@@ -61,7 +61,7 @@ agents:
     role: "Email Marketing Specialist"
     goal: "Create nurture sequences and drip campaigns following current email deliverability best practices and compliance standards"
     backstory: "You follow Litmus, Email on Acid, and the email marketing community for the latest on deliverability, design, and engagement."
-    llm: "claude-sonnet-4-5"
+    llm: "grok-3-fast"
     tools: ["gohighlevel_api", "sendgrid"]
     output: "3-4 active drip sequences running continuously"
 
@@ -69,5 +69,5 @@ agents:
     role: "Conversion Copywriter"
     goal: "Generate high-converting landing page copy and marketing content following current CRO best practices"
     backstory: "You study the latest from CXL, Unbounce, and the CRO community. You apply current conversion optimization frameworks, not outdated tactics."
-    llm: "claude-sonnet-4-5"
+    llm: "grok-3"
     tools: ["filesystem", "gohighlevel_api", "github", "browserbase"]
