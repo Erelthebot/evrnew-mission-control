@@ -6,7 +6,6 @@
 // TYPES
 // ─────────────────────────────────────────────
 
-export type TaskStatus = 'todo' | 'in_progress' | 'review' | 'done'
 export type Priority = 'critical' | 'high' | 'medium' | 'low'
 export type EventCategory = 'job' | 'estimate' | 'sales' | 'admin' | 'automation' | 'reminder'
 export type MemoryCategory = 'Customers' | 'Jobs' | 'Sales' | 'Operations' | 'Team' | 'Vendors' | 'Automations' | 'Finance'
@@ -16,21 +15,6 @@ export type MemberType = 'human' | 'ai'
 export type MemberStatus = 'active' | 'away' | 'busy'
 export type WorkloadLevel = 'light' | 'normal' | 'heavy'
 export type ServiceHealth = 'online' | 'degraded' | 'offline' | 'pending'
-
-export interface Task {
-  id: string
-  title: string
-  description: string
-  assignee: string
-  priority: Priority
-  dueDate: string
-  projectId: string
-  tags: string[]
-  status: TaskStatus
-  createdBy: string
-  relatedAgent: string | null
-  updatedAt: string
-}
 
 export interface CalendarEvent {
   id: string
@@ -131,222 +115,6 @@ export interface CronJob {
   status: 'ok' | 'warning' | 'error'
 }
 
-// ─────────────────────────────────────────────
-// TASKS — Seed Data
-// ─────────────────────────────────────────────
-
-export const tasks: Task[] = [
-  {
-    id: 't1',
-    title: 'Follow up on attic insulation quote — Martinez Residence, Seattle',
-    description: 'Sent quote 3 days ago. No response. Call + email follow-up sequence.',
-    assignee: 'Johnny',
-    priority: 'high',
-    dueDate: '2026-03-06',
-    projectId: 'p2',
-    tags: ['sales', 'attic', 'seattle'],
-    status: 'in_progress',
-    createdBy: 'Erel',
-    relatedAgent: 'email_drip',
-    updatedAt: '2026-03-05T08:30:00Z',
-  },
-  {
-    id: 't2',
-    title: 'Schedule crawlspace encapsulation install — Kirkland',
-    description: 'Customer confirmed. Need to book Clint + AJ for 2-day job.',
-    assignee: 'Scheduling Agent',
-    priority: 'high',
-    dueDate: '2026-03-07',
-    projectId: 'p3',
-    tags: ['scheduling', 'crawlspace', 'kirkland'],
-    status: 'todo',
-    createdBy: 'Misty',
-    relatedAgent: null,
-    updatedAt: '2026-03-05T07:15:00Z',
-  },
-  {
-    id: 't3',
-    title: 'Commercial spray foam bid — Amazon HQ Renovation, Bellevue',
-    description: 'Large commercial opportunity. Scope: 18,000 sqft open-cell. Need detailed estimate + proposal.',
-    assignee: 'Erel',
-    priority: 'critical',
-    dueDate: '2026-03-08',
-    projectId: 'p2',
-    tags: ['commercial', 'spray-foam', 'bellevue', 'high-value'],
-    status: 'review',
-    createdBy: 'Johnny',
-    relatedAgent: 'strategy',
-    updatedAt: '2026-03-05T09:45:00Z',
-  },
-  {
-    id: 't4',
-    title: 'Submit PSE rebate paperwork — Johnson attic job',
-    description: 'Puget Sound Energy rebate for blown-in attic. Forms signed. Submit to PSE portal.',
-    assignee: 'Finance Agent',
-    priority: 'high',
-    dueDate: '2026-03-10',
-    projectId: 'p9',
-    tags: ['rebate', 'pse', 'paperwork', 'finance'],
-    status: 'todo',
-    createdBy: 'Diane',
-    relatedAgent: null,
-    updatedAt: '2026-03-04T16:00:00Z',
-  },
-  {
-    id: 't5',
-    title: 'Write SOP: Attic Insulation Installation Workflow v3.0',
-    description: 'Update field SOP to include new blower door test requirements and photo checklist.',
-    assignee: 'Documentation Agent',
-    priority: 'medium',
-    dueDate: '2026-03-12',
-    projectId: 'p1',
-    tags: ['sop', 'documentation', 'attic'],
-    status: 'in_progress',
-    createdBy: 'Erel',
-    relatedAgent: null,
-    updatedAt: '2026-03-05T10:00:00Z',
-  },
-  {
-    id: 't6',
-    title: 'Build GHL automation: estimate follow-up 3-touch sequence',
-    description: 'Create email + SMS drip for unresponded estimates: Day 1, Day 3, Day 7.',
-    assignee: 'Erel',
-    priority: 'high',
-    dueDate: '2026-03-09',
-    projectId: 'p5',
-    tags: ['ghl', 'automation', 'crm', 'email'],
-    status: 'todo',
-    createdBy: 'Erel',
-    relatedAgent: 'email_drip',
-    updatedAt: '2026-03-05T08:00:00Z',
-  },
-  {
-    id: 't7',
-    title: 'Q1 marketing campaign performance review',
-    description: 'Analyze Google Ads, Meta, and SEO performance Jan–Mar. Recommend Q2 budget shifts.',
-    assignee: 'Marketing Agent',
-    priority: 'medium',
-    dueDate: '2026-03-15',
-    projectId: 'p6',
-    tags: ['marketing', 'analytics', 'reporting'],
-    status: 'review',
-    createdBy: 'Erel',
-    relatedAgent: 'strategy',
-    updatedAt: '2026-03-04T14:30:00Z',
-  },
-  {
-    id: 't8',
-    title: 'Post lead installer job listing — crawlspace division',
-    description: 'Post to Indeed, ZipRecruiter, and Craigslist. Budget: $150/mo ads.',
-    assignee: 'Misty',
-    priority: 'high',
-    dueDate: '2026-03-06',
-    projectId: 'p7',
-    tags: ['hiring', 'staffing', 'crawlspace'],
-    status: 'in_progress',
-    createdBy: 'Misty',
-    relatedAgent: null,
-    updatedAt: '2026-03-05T09:00:00Z',
-  },
-  {
-    id: 't9',
-    title: 'Invoice client — Marysville attic blown-in job',
-    description: 'Job completed 3/3. Generate QuickBooks invoice. Net 15.',
-    assignee: 'Diane',
-    priority: 'high',
-    dueDate: '2026-03-06',
-    projectId: 'p8',
-    tags: ['invoicing', 'quickbooks', 'marysville'],
-    status: 'todo',
-    createdBy: 'Diane',
-    relatedAgent: null,
-    updatedAt: '2026-03-05T07:00:00Z',
-  },
-  {
-    id: 't10',
-    title: 'Create Bellevue spray foam service landing page',
-    description: 'Target KW: "spray foam insulation Bellevue WA". CRO-optimized with trust signals.',
-    assignee: 'Marketing Agent',
-    priority: 'medium',
-    dueDate: '2026-03-14',
-    projectId: 'p6',
-    tags: ['seo', 'landing-page', 'bellevue', 'spray-foam'],
-    status: 'in_progress',
-    createdBy: 'Erel',
-    relatedAgent: 'landing_page_content',
-    updatedAt: '2026-03-05T11:00:00Z',
-  },
-  {
-    id: 't11',
-    title: 'Google Ads optimization — Q2 insulation campaigns',
-    description: 'Increase budget for top performers. Pause underperforming ad groups. Update RSAs.',
-    assignee: 'Ads Agent',
-    priority: 'high',
-    dueDate: '2026-03-10',
-    projectId: 'p6',
-    tags: ['ads', 'google-ads', 'ppc'],
-    status: 'in_progress',
-    createdBy: 'Erel',
-    relatedAgent: 'google_meta_ads',
-    updatedAt: '2026-03-05T10:30:00Z',
-  },
-  {
-    id: 't12',
-    title: 'Complete evrnew.com technical SEO audit',
-    description: 'Core Web Vitals, schema markup, internal linking, site speed.',
-    assignee: 'Technical SEO Agent',
-    priority: 'medium',
-    dueDate: '2026-03-01',
-    projectId: 'p6',
-    tags: ['seo', 'technical', 'audit'],
-    status: 'done',
-    createdBy: 'Erel',
-    relatedAgent: 'technical_seo',
-    updatedAt: '2026-03-01T17:00:00Z',
-  },
-  {
-    id: 't13',
-    title: 'Onboard Oscar — new field technician',
-    description: 'Complete I-9, benefits enrollment, field safety training, tool check-out.',
-    assignee: 'Misty',
-    priority: 'high',
-    dueDate: '2026-02-28',
-    projectId: 'p7',
-    tags: ['onboarding', 'hr', 'field-tech'],
-    status: 'done',
-    createdBy: 'Misty',
-    relatedAgent: null,
-    updatedAt: '2026-02-28T16:00:00Z',
-  },
-  {
-    id: 't14',
-    title: 'Set up QuickBooks + GHL invoice sync',
-    description: 'Automate QB invoice creation when GHL opportunity moves to "Won".',
-    assignee: 'Erel',
-    priority: 'high',
-    dueDate: '2026-03-20',
-    projectId: 'p8',
-    tags: ['quickbooks', 'ghl', 'automation', 'finance'],
-    status: 'todo',
-    createdBy: 'Diane',
-    relatedAgent: null,
-    updatedAt: '2026-03-04T12:00:00Z',
-  },
-  {
-    id: 't15',
-    title: 'Competitor analysis: Top 5 insulation companies in Seattle',
-    description: 'Pricing, services, reviews, ad strategy, differentiators.',
-    assignee: 'Competitive Intel Agent',
-    priority: 'medium',
-    dueDate: '2026-03-11',
-    projectId: 'p6',
-    tags: ['competitor', 'research', 'seattle'],
-    status: 'review',
-    createdBy: 'Erel',
-    relatedAgent: 'competitive_intelligence',
-    updatedAt: '2026-03-04T18:00:00Z',
-  },
-]
 
 // ─────────────────────────────────────────────
 // CALENDAR EVENTS — Seed Data
@@ -693,13 +461,13 @@ export const projects: Project[] = [
     id: 'p8',
     name: 'QuickBooks / Invoicing Workflow',
     description: 'Automate invoicing end-to-end: GHL won → QB invoice → payment tracking → follow-up.',
-    status: 'blocked',
-    owner: 'Diane',
+    status: 'planning',
+    owner: 'Finance Agent',
     priority: 'high',
-    blockers: ['GHL-QuickBooks API integration not yet configured', 'Need QuickBooks Online API credentials from Diane'],
-    nextActions: ['Get QB API credentials from Diane', 'Test GHL-QB Zapier bridge', 'Set up payment reminder automations'],
-    percentComplete: 15,
-    updatedAt: '2026-03-04T12:00:00Z',
+    blockers: [],
+    nextActions: ['Wire QB daily summary into 05:00 digest', 'Build GHL won → QB invoice automation', 'Set up payment reminder automations'],
+    percentComplete: 75,
+    updatedAt: '2026-04-10T12:00:00Z',
   },
   {
     id: 'p9',
@@ -948,8 +716,8 @@ export const teamMembers: TeamMember[] = [
     status: 'active',
     currentActivity: 'Building Mission Control app',
     workload: 'heavy',
-    model: 'Claude Sonnet 4.6',
-    tools: ['All MCP servers', 'Claude Code', 'Convex', 'Netlify'],
+    model: 'Qwen3.5-27B / Grok 3 / Gemini Pro',
+    tools: ['All MCP servers', 'xAI API', 'Gemini API', 'llama-server'],
   },
   {
     id: 'tm9',
@@ -961,7 +729,7 @@ export const teamMembers: TeamMember[] = [
     status: 'active',
     currentActivity: 'Monitoring estimate follow-up queue',
     workload: 'normal',
-    model: 'Claude Sonnet',
+    model: 'Gemini Pro',
     tools: ['GoHighLevel API', 'Gmail API', 'Memory MCP'],
   },
   {
@@ -974,7 +742,7 @@ export const teamMembers: TeamMember[] = [
     status: 'active',
     currentActivity: 'Updating attic installation SOP v3.0',
     workload: 'normal',
-    model: 'Claude Sonnet',
+    model: 'Qwen3.5-27B',
     tools: ['Filesystem MCP', 'Memory MCP', 'Sequential Thinking'],
   },
   {
@@ -987,7 +755,7 @@ export const teamMembers: TeamMember[] = [
     status: 'active',
     currentActivity: 'Preparing PSE rebate submission packet',
     workload: 'normal',
-    model: 'Claude Sonnet',
+    model: 'Gemini Pro',
     tools: ['QuickBooks API', 'GoHighLevel', 'Filesystem MCP'],
   },
   {
@@ -1000,7 +768,7 @@ export const teamMembers: TeamMember[] = [
     status: 'busy',
     currentActivity: 'Writing Bellevue spray foam landing page copy',
     workload: 'heavy',
-    model: 'Claude Sonnet',
+    model: 'Gemini Pro',
     tools: ['DataForSEO', 'BrowserBase', 'Buffer API', 'GHL'],
   },
   {
@@ -1013,7 +781,7 @@ export const teamMembers: TeamMember[] = [
     status: 'active',
     currentActivity: 'Checking crew availability for Kirkland crawlspace',
     workload: 'light',
-    model: 'Grok Fast',
+    model: 'Grok 3',
     tools: ['GHL API', 'Gmail API', 'Memory MCP'],
   },
   {
@@ -1026,8 +794,8 @@ export const teamMembers: TeamMember[] = [
     status: 'active',
     currentActivity: 'Drafting lead installer job description',
     workload: 'normal',
-    model: 'Claude Sonnet',
-    tools: ['Indeed API', 'Gmail API', 'Memory MCP'],
+    model: 'Grok 3',
+    tools: ['xAI Grok API', 'Gmail API', 'Memory MCP'],
   },
   {
     id: 'tm15',
@@ -1039,21 +807,122 @@ export const teamMembers: TeamMember[] = [
     status: 'busy',
     currentActivity: 'Writing Attic Installation SOP v3.0',
     workload: 'heavy',
-    model: 'Claude Sonnet',
+    model: 'Gemini Pro',
     tools: ['Filesystem MCP', 'Memory MCP', 'Sequential Thinking'],
   },
 ]
 
-// The 8 existing system/marketing agents from the server
-export const systemAgents = [
-  { id: 'sa1', name: 'competitive_intelligence', role: 'Monitor competitors, Google Alerts, reviews', model: 'Grok Fast', tools: 'BrowserBase, Playwright, web scraping', badge: 'purple' },
-  { id: 'sa2', name: 'strategy', role: 'Campaign planning, market analysis, decisions', model: 'Claude Opus', tools: 'Memory MCP, sequential-thinking MCP', badge: 'blue' },
-  { id: 'sa3', name: 'google_meta_ads', role: 'Google Ads + Meta Ads management & optimization', model: 'Claude Sonnet', tools: 'Google Ads API, Meta API, GHL', badge: 'red' },
-  { id: 'sa4', name: 'blog_seo_content', role: 'Blog posts, landing pages, E-E-A-T content', model: 'Claude Sonnet', tools: 'DataForSEO, Search Console, fetch MCP', badge: 'green' },
-  { id: 'sa5', name: 'social_media', role: 'Social posts, scheduling, engagement', model: 'Grok Fast', tools: 'Buffer API, BrowserBase', badge: 'yellow' },
-  { id: 'sa6', name: 'technical_seo', role: 'Site audits, Core Web Vitals, schema markup', model: 'Grok Fast', tools: 'DataForSEO, Search Console alerts', badge: 'blue' },
-  { id: 'sa7', name: 'email_drip', role: 'GHL drip campaigns, lead nurturing sequences', model: 'Claude Sonnet', tools: 'GHL API, SendGrid, Gmail API', badge: 'purple' },
-  { id: 'sa8', name: 'landing_page_content', role: 'CRO-optimized landing page copy', model: 'Claude Sonnet', tools: 'BrowserBase, GHL, SpyFu', badge: 'green' },
+// The 8 real system/marketing agents running on erel.local
+export interface SystemAgent {
+  id: string
+  role: string
+  llm: string
+  tools: string[]
+  schedule: string
+  status: 'active' | 'idle' | 'error'
+  lastRun?: string
+  outputDir?: string
+  plist?: string
+  description?: string
+}
+
+export const systemAgents: SystemAgent[] = [
+  {
+    id: 'sa-1',
+    role: 'Competitive Intelligence Agent',
+    llm: 'llama-server',
+    tools: ['DataForSEO SERP API', 'Facebook Ad Library', 'Brave Search', 'BrowserBase'],
+    schedule: 'Daily 6:00 AM',
+    status: 'active',
+    lastRun: '2026-04-10T06:00:00',
+    outputDir: '~/evrnew-marketing/data/competitors/',
+    plist: 'com.evrnew.agent-competitive',
+    description: 'Monitors SERP rankings, competitor ad spend, and Facebook Ad Library for the PNW insulation market',
+  },
+  {
+    id: 'sa-2',
+    role: 'Google & Meta Ads Agent',
+    llm: 'fast (grok-3)',
+    tools: ['xAI API', 'Google Ads API', 'Meta Marketing API'],
+    schedule: 'Every 6 hours',
+    status: 'active',
+    lastRun: '2026-04-10T06:00:00',
+    outputDir: '~/evrnew-marketing/data/ads/',
+    plist: 'com.evrnew.agent-ads',
+    description: 'Generates A/B/C ad copy for Google Search and Facebook/Instagram targeting PNW homeowners',
+  },
+  {
+    id: 'sa-3',
+    role: 'Blog & SEO Content Agent',
+    llm: 'reasoning (deepseek-v4-flash)',
+    tools: ['OpenRouter', 'DataForSEO', 'Google Search Console'],
+    schedule: 'Mon & Thu 9:00 AM',
+    status: 'active',
+    lastRun: '2026-04-10T09:00:00',
+    outputDir: '~/evrnew-marketing/data/blog-seo/',
+    plist: 'com.evrnew.agent-blog-seo',
+    description: 'Generates local SEO blog posts targeting PNW insulation keywords across King, Snohomish, and Skagit counties',
+  },
+  {
+    id: 'sa-4',
+    role: 'General Content Agent',
+    llm: 'reasoning (deepseek-v4-flash)',
+    tools: ['OpenRouter', 'Filesystem MCP'],
+    schedule: 'Daily 7:00 AM',
+    status: 'active',
+    lastRun: '2026-04-10T07:00:00',
+    outputDir: '~/evrnew-marketing/data/content/',
+    plist: 'com.evrnew.agent-content',
+    description: 'Generates landing pages, email sequences, service page copy, and FAQ content for EVRNEW markets',
+  },
+  {
+    id: 'sa-5',
+    role: 'Marketing Strategy Agent',
+    llm: 'consensus (Holo3-35B + grok-3 + DeepSeek-V4-Flash)',
+    tools: ['consensus.py (Holo3 + xAI + OpenRouter)', 'Competitive Intel Data'],
+    schedule: 'Weekly Mon 8:00 AM',
+    status: 'active',
+    lastRun: '2026-04-20T08:00:00',
+    outputDir: '~/evrnew-marketing/data/strategy/',
+    plist: 'com.evrnew.agent-strategy',
+    description: 'Synthesizes competitive intel and market data into weekly marketing strategy briefs via multi-LLM consensus engine',
+  },
+  {
+    id: 'sa-6',
+    role: 'Social Media Agent',
+    llm: 'grok-3',
+    tools: ['xAI Grok API', 'Buffer API'],
+    schedule: 'Daily 8:00 AM',
+    status: 'active',
+    lastRun: '2026-04-10T08:00:00',
+    outputDir: '~/evrnew-marketing/data/social/',
+    plist: 'com.evrnew.agent-social',
+    description: 'Generates daily posts for Facebook, Instagram, and Google Business Profile targeting PNW homeowners',
+  },
+  {
+    id: 'sa-7',
+    role: 'Technical SEO Agent',
+    llm: 'llama-server',
+    tools: ['llama-server', 'DataForSEO', 'Google Search Console'],
+    schedule: 'Weekly Wed 10:00 AM',
+    status: 'active',
+    lastRun: '2026-04-09T10:00:00',
+    outputDir: '~/evrnew-marketing/data/seo/',
+    plist: 'com.evrnew.agent-technical-seo',
+    description: 'Generates LocalBusiness schema markup, technical SEO audits, and keyword opportunity reports for evrnew.com',
+  },
+  {
+    id: 'sa-8',
+    role: 'Email Drip Agent',
+    llm: 'fast (grok-3)',
+    tools: ['xAI API', 'SendGrid', 'GoHighLevel'],
+    schedule: 'Weekly Tue 9:00 AM',
+    status: 'active',
+    lastRun: '2026-04-08T09:00:00',
+    outputDir: '~/evrnew-marketing/data/email-drip/',
+    plist: 'com.evrnew.agent-email-drip',
+    description: 'Generates 5-email nurture sequences for attic, crawl space, spray foam, post-estimate, and rebate lead types',
+  },
 ]
 
 // ─────────────────────────────────────────────
@@ -1090,35 +959,45 @@ export const activityLogs: ActivityLog[] = [
 // ─────────────────────────────────────────────
 
 export const systemServices: SystemService[] = [
-  { id: 'ss1', name: 'Gmail Inbox Monitor', description: 'erel_inbox_monitor.py — polls erel@evrnew.com every 5 min via Gmail API (OAuth2)', status: 'online', lastChecked: '2026-03-05T11:45:00Z', uptime: '99.8%' },
-  { id: 'ss2', name: 'Telegram Bot', description: '@evrnew_agent_bot — python-telegram-bot v22 with polling', status: 'online', lastChecked: '2026-03-05T11:45:00Z', uptime: '99.9%' },
-  { id: 'ss3', name: 'Ollama LLM', description: 'llama3.2:3b local inference — port 11434', status: 'online', lastChecked: '2026-03-05T11:45:00Z', endpoint: 'http://localhost:11434', uptime: '99.5%' },
-  { id: 'ss4', name: 'n8n Automation', description: 'n8n 2.10.2 workflow automation engine', status: 'online', lastChecked: '2026-03-05T11:45:00Z', endpoint: 'http://localhost:5678', uptime: '98.9%' },
-  { id: 'ss5', name: 'Moltbook Heartbeat', description: 'erel_evrnew agent — 30min heartbeat via LaunchAgent', status: 'online', lastChecked: '2026-03-05T11:30:00Z', uptime: '99.8%' },
-  { id: 'ss6', name: 'Cron: Health Check', description: 'health-check.sh — every 15 minutes', status: 'online', lastChecked: '2026-03-05T11:45:00Z' },
-  { id: 'ss7', name: 'Cron: Log Rotation', description: 'log-rotate.sh — Sunday 3 AM', status: 'online', lastChecked: '2026-03-02T03:00:00Z' },
-  { id: 'ss8', name: 'Cron: Disk Cleanup', description: 'disk-cleanup.sh — Sunday 4 AM', status: 'online', lastChecked: '2026-03-02T04:00:00Z' },
+  { id: 'ss1', name: 'OpenClaw Gateway', description: 'ai.openclaw.gateway — Erel AI agent on port 18789. Telegram @theErelbot. Telegram filter proxy on port 18799. LLM v6.0: OpenRouter hub → xAI (fast) / Gemini (reasoning).', status: 'online', lastChecked: '2026-04-12T00:00:00Z', endpoint: 'http://localhost:18789', uptime: '99.9%' },
+  { id: 'ss2', name: 'Telegram Bot (@theErelbot)', description: 'OpenClaw-powered Telegram bot — polling mode. Handles DMs and group messages in Evrnew Marketing group. Filter proxy strips code blocks and announcement patterns.', status: 'online', lastChecked: '2026-04-10T00:00:00Z', uptime: '99.9%' },
+  { id: 'ss3', name: 'Mission Control', description: 'Next.js 15 app — this dashboard. Running via com.evrnew.mission-control launchd on port 3003. nginx Docker proxies 443/80 → 3003. Auth-gated at erel.evrnew.com.', status: 'online', lastChecked: '2026-04-10T00:00:00Z', endpoint: 'http://localhost:3003', uptime: '100%' },
+  { id: 'ss4', name: 'mlx_lm.server (master)', description: 'Local MLX inference — mlx_lm.server on port 52416. Model: mlx-community/Llama-3.3-70B-Instruct-4bit (falls back to 1B when GPU budget full from llama-server). com.erel.mlx-server LaunchAgent (user domain, KeepAlive).', status: 'online', lastChecked: '2026-04-21T00:00:00Z', endpoint: 'http://localhost:52416', uptime: '99.0%' },
+  { id: 'ss4b', name: 'mlx_lm.server (worker)', description: 'erel_worker (192.168.100.2, M5 Pro 48GB). mlx_lm.server port 52415 — model: Llama-3.3-70B-Instruct-4bit (37GB). Reachable via TB5 (192.168.100.2) or WiFi (192.168.50.133). SSH: erel_worker@192.168.100.2.', status: 'online', lastChecked: '2026-04-21T00:00:00Z', endpoint: 'http://192.168.100.2:52415', uptime: '99.0%' },
+  { id: 'ss5', name: 'n8n Automation', description: 'n8n workflow automation engine — port 5678. Firewall blocks external access via pf anchor.', status: 'online', lastChecked: '2026-04-10T00:00:00Z', endpoint: 'http://localhost:5678', uptime: '98.9%' },
+  { id: 'ss6', name: 'Gmail Inbox Monitor', description: 'OpenClaw gmail-watcher — monitors erel@evrnew.com via Gmail API (OAuth2). Embedded in OpenClaw gateway. Routes email events through xAI Grok (xai/grok-3).', status: 'online', lastChecked: '2026-04-21T00:00:00Z', uptime: '99.8%' },
+  { id: 'ss7', name: 'Moltbook Heartbeat', description: 'erel_evrnew agent presence heartbeat — 30min interval via com.evrnew.moltbook-heartbeat launchd. Claim: swim-8NS3.', status: 'online', lastChecked: '2026-04-10T00:00:00Z', uptime: '99.8%' },
+  { id: 'ss8', name: 'BrowserBase Relay', description: 'com.openclaw.relay — Brave Browser CDP relay on port 18792. Extension ID: afnkdpofggpbedjdmihhkfcjohalfiog (unpacked). Watchdog restarts every 60s.', status: 'online', lastChecked: '2026-04-10T00:00:00Z', endpoint: 'http://localhost:18792', uptime: '99.0%' },
+  { id: 'ss8b', name: 'Telegram Filter Proxy', description: 'com.evrnew.telegram-filter — port 18799. Strips code fences, JSON blobs, stack traces from all messages. Hard-blocks announcement patterns to group -5294204937.', status: 'online', lastChecked: '2026-04-10T00:00:00Z', endpoint: 'http://localhost:18799', uptime: '99.9%' },
+  { id: 'ss9', name: 'Cron: Health Check', description: 'health-check.sh — every 15 minutes via launchd. Silent on pass, alerts only on failure.', status: 'online', lastChecked: '2026-04-10T00:00:00Z' },
+  { id: 'ss10', name: 'Cron: Log Rotation', description: 'log-rotate.sh — Sunday 3 AM', status: 'online', lastChecked: '2026-04-10T03:00:00Z' },
+  { id: 'ss11', name: 'Cron: Disk Cleanup', description: 'disk-cleanup.sh — Sunday 4 AM', status: 'online', lastChecked: '2026-04-10T04:00:00Z' },
 ]
 
 export const integrations: Integration[] = [
-  { name: 'Anthropic Claude API', purpose: 'Content, strategy, copy generation', status: 'active' },
+  { name: 'xAI Grok API', purpose: 'Fast inference tier — conversational, real-time, monitoring. Model resolved at runtime from xAI API.', status: 'active' },
+  { name: 'Google Gemini API', purpose: 'Reasoning/synthesis tier — brand-critical content, strategy, consensus engine. OpenAI-compatible endpoint.', status: 'active' },
+  { name: 'OpenRouter API', purpose: 'DeepSeek-V4-Flash — reasoning, consensus synthesis, hub routing. Fallback: MLX Llama-3.3-70B-4bit cluster (proxy :52415).', status: 'active' },
+  { name: 'mlx_lm.server', purpose: 'Local 2-node MLX inference — Llama-3.3-70B-Instruct-4bit. Master port 52416, worker port 52415 (192.168.100.2 TB5). Cluster proxy on port 52415 round-robins both nodes.', status: 'active' },
+  { name: 'Ollama (embeddings)', purpose: 'nomic-embed-text embeddings only — port 11435, CrewAI memory. NOT in inference chain.', status: 'active' },
+  { name: 'OpenClaw Gateway', purpose: 'AI agent gateway — Erel on port 18789, full tool access', status: 'active' },
+  { name: 'Telegram Bot (@theErelbot)', purpose: 'Command & control — DMs and Evrnew Marketing group (-5294204937)', status: 'active' },
   { name: 'Gmail API (OAuth2)', purpose: 'Inbox monitoring, email send for erel@evrnew.com', status: 'active' },
-  { name: 'Ollama (local)', purpose: 'Local llama3.2:3b inference', status: 'active' },
-  { name: 'xAI Grok API', purpose: 'Fast/cheap monitoring tasks', status: 'active' },
-  { name: 'GoHighLevel CRM', purpose: 'Lead management, campaigns, automation', status: 'active' },
-  { name: 'DataForSEO', purpose: 'SERP data, keyword research', status: 'active' },
-  { name: 'Google Ads API', purpose: 'Ad performance, bid management', status: 'pending', note: 'API key needed' },
-  { name: 'SpyFu', purpose: 'Competitor keyword/ad intelligence', status: 'active' },
-  { name: 'SendGrid', purpose: 'Transactional email delivery', status: 'active' },
-  { name: 'Buffer', purpose: 'Social media scheduling', status: 'active' },
-  { name: 'BrowserBase', purpose: 'Cloud Chrome, authenticated scraping', status: 'active' },
+  { name: 'GoHighLevel CRM', purpose: 'Lead management, campaigns, automation — locationId 4DKapRFZCHMehBPjCKKU', status: 'active' },
+  { name: 'BrowserBase', purpose: 'Cloud Chrome sessions, authenticated scraping — relay on port 18792', status: 'active' },
+  { name: 'Brave Browser', purpose: 'Primary browser for all agent browsing needs', status: 'active' },
+  { name: 'Google Ads API', purpose: 'Ad performance, bid management — erel@evrnew.com account', status: 'active' },
   { name: 'Google Maps API', purpose: 'Local SEO, competitor mapping', status: 'active' },
-  { name: 'Netlify CLI', purpose: 'Site deployment (openclaw-evrnew.netlify.app)', status: 'active' },
-  { name: 'Moltbook API', purpose: 'AI agent social network, agent heartbeat', status: 'active' },
-  { name: 'Telegram Bot API', purpose: 'Command & control via @evrnew_agent_bot', status: 'active' },
-  { name: 'Google Voice', purpose: 'Phone: +1 (206) 453-0208', status: 'active' },
+  { name: 'Google Analytics', purpose: 'Site traffic & conversion — Measurement ID: G-T5DME0H4F1', status: 'active' },
+  { name: 'SpyFu', purpose: 'Competitor keyword/ad intelligence', status: 'active' },
+  { name: 'DataForSEO', purpose: 'SERP data, keyword research — credentials active', status: 'active' },
+  { name: 'SendGrid', purpose: 'Transactional email delivery', status: 'active' },
+  { name: 'Twilio', purpose: 'SMS/voice automation — +1 (206) 472-1445', status: 'active' },
+  { name: 'Buffer', purpose: 'Social media scheduling — BUFFER_SESSION_TOKEN active', status: 'active' },
+  { name: 'GitHub', purpose: 'Repo management via MCP — token active', status: 'active' },
+  { name: 'Moltbook API', purpose: 'AI agent social network — erel_evrnew agent heartbeat every 30min', status: 'active' },
+  { name: 'QuickBooks Online', purpose: 'Accounting — AR, AP, invoices, P&L. Realm 9130356013963916 (Evrnew LLC). qb_tool.py active.', status: 'active' },
 ]
-
 export const mcpServers = [
   { name: 'filesystem', description: 'Read/write access to ~/evrnew-marketing/', status: 'active' },
   { name: 'memory', description: 'Persistent key-value memory across sessions', status: 'active' },
@@ -1136,24 +1015,17 @@ export const mcpServers = [
 // ─────────────────────────────────────────────
 
 export const PRIORITY_COLORS: Record<Priority, string> = {
-  critical: 'text-red-400 bg-red-400/10 border-red-400/30',
-  high: 'text-orange-400 bg-orange-400/10 border-orange-400/30',
-  medium: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30',
-  low: 'text-gray-400 bg-gray-400/10 border-gray-400/30',
-}
-
-export const STATUS_COLORS: Record<TaskStatus, string> = {
-  todo: 'text-gray-400',
-  in_progress: 'text-[#00e5ff]',
-  review: 'text-yellow-400',
-  done: 'text-[#22c55e]',
+  critical: 'text-red-700 bg-red-50 border-red-300',
+  high: 'text-orange-700 bg-orange-50 border-orange-300',
+  medium: 'text-amber-700 bg-amber-50 border-amber-300',
+  low: 'text-slate-600 bg-slate-100 border-slate-300',
 }
 
 export const PROJECT_STATUS_COLORS: Record<ProjectStatus, string> = {
-  active: 'text-[#22c55e] bg-[#22c55e]/10 border-[#22c55e]/30',
-  planning: 'text-[#00e5ff] bg-[#00e5ff]/10 border-[#00e5ff]/30',
-  blocked: 'text-red-400 bg-red-400/10 border-red-400/30',
-  completed: 'text-gray-400 bg-gray-400/10 border-gray-400/30',
+  active: 'text-emerald-700 bg-emerald-50 border-emerald-300',
+  planning: 'text-sky-700 bg-sky-50 border-sky-300',
+  blocked: 'text-red-700 bg-red-50 border-red-300',
+  completed: 'text-slate-600 bg-slate-100 border-slate-300',
 }
 
 export function timeAgo(isoString: string): string {
