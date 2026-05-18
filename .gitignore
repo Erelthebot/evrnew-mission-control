@@ -1,6 +1,7 @@
 # Environment & secrets
 .env
 *.env
+!.env.example
 .envrc
 EREL_MEMORY.md
 config/gmail/

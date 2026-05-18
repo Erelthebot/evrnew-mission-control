@@ -29,18 +29,16 @@ echo "[$TIMESTAMP] --- watchdog run ---" >> "$LOG"
 # ── Load env ────────────────────────────────────────────────────
 [ -f "$HOME/evrnew-marketing/.env" ] && { set -a; source "$HOME/evrnew-marketing/.env"; set +a; }
 
-# ── Check Anthropic API key health ──────────────────────────────
-if [ -n "$ANTHROPIC_API_KEY" ]; then
+# ── Check Gemini API key health ─────────────────────────────────
+GEMINI_API_KEY="${GEMINI_API_KEY:-}"
+if [ -n "$GEMINI_API_KEY" ]; then
   HTTP=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
-    -H "x-api-key: ${ANTHROPIC_API_KEY}" \
-    -H "anthropic-version: 2023-06-01" \
-    -H "content-type: application/json" \
-    -d '{"model":"claude-haiku-4-5","max_tokens":5,"messages":[{"role":"user","content":"ping"}]}' \
-    https://api.anthropic.com/v1/messages)
+    -H "Authorization: Bearer ${GEMINI_API_KEY}" \
+    "https://generativelanguage.googleapis.com/v1beta/openai/models")
   if [ "$HTTP" = "200" ]; then
-    echo "[$TIMESTAMP]   OK  anthropic-api (HTTP 200)" >> "$LOG"
+    echo "[$TIMESTAMP]   OK  gemini-api (HTTP 200)" >> "$LOG"
   else
-    echo "[$TIMESTAMP]  WARN anthropic-api returned HTTP $HTTP" >> "$LOG"
+    echo "[$TIMESTAMP]  WARN gemini-api returned HTTP $HTTP" >> "$LOG"
     CRITICAL_FAILURES=$((CRITICAL_FAILURES+1))
   fi
 fi
