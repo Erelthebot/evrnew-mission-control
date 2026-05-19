@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """
 Erel Consensus Engine
-Fires Holo3 (local) + Grok-3 analytical + DeepSeek-V4-Flash reasoning in parallel.
-DeepSeek-V4-Flash synthesizes the final recommendation (thinking mode on hard cases).
+Fires Holo3 (local vision/UI) + Grok-3 analytical + exo-cluster reasoning in parallel.
+Reasoning model on exo cluster synthesizes the final recommendation.
+
+Reasoning runs LOCALLY on the exo cluster (master coordinator + worker MLX inference)
+— no per-call cost, no external dependency. DeepSeek-V4-Flash is the eventual target
+but its 148GB MLX footprint exceeds current 96GB pooled cluster RAM; Llama-3.3-70B-4bit
+(38GB) is the in-cluster substitute today.
 
 Usage:
     python3 consensus.py "Your strategic question here"
@@ -16,15 +21,16 @@ import sys
 from pathlib import Path
 
 import httpx
-import openai
 from openai import AsyncOpenAI
 
 XAI_API_KEY = os.environ.get("XAI_API_KEY", "")
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 LOCAL_URL = os.environ.get("LOCAL_URL", "http://127.0.0.1:8080")
+EXO_URL = os.environ.get("EXO_URL", "http://127.0.0.1:52415/v1")
 
 XAI_MODEL = os.environ.get("XAI_MODEL", "grok-3")
-REASONING_MODEL = os.environ.get("REASONING_MODEL", "deepseek/deepseek-v4-flash")
+REASONING_MODEL = os.environ.get(
+    "REASONING_MODEL", "mlx-community/Llama-3.3-70B-Instruct-4bit"
+)
 
 _CFG_PATH = Path(__file__).parent / "config" / "llm-config.json"
 if _CFG_PATH.exists():
@@ -32,6 +38,7 @@ if _CFG_PATH.exists():
         _cfg = json.load(f)
     XAI_MODEL = _cfg.get("fast", {}).get("model", XAI_MODEL)
     REASONING_MODEL = _cfg.get("reasoning", {}).get("model", REASONING_MODEL)
+    EXO_URL = _cfg.get("reasoning", {}).get("base_url", EXO_URL)
 
 _model_cache: dict = {}
 
@@ -41,9 +48,10 @@ xai_client = AsyncOpenAI(
     base_url="https://api.x.ai/v1",
 )
 
-openrouter_client = AsyncOpenAI(
-    api_key=OPENROUTER_API_KEY,
-    base_url="https://openrouter.ai/api/v1",
+# exo cluster speaks OpenAI-compatible at EXO_URL; no API key required.
+exo_client = AsyncOpenAI(
+    api_key="exo-local",
+    base_url=EXO_URL,
 )
 
 
@@ -108,20 +116,20 @@ async def ask_xai_analytical(prompt: str) -> str:
     return (resp.choices[0].message.content or "").strip()
 
 
-def _reasoning_extra(thinking: bool) -> dict:
-    if not thinking:
-        return {}
-    return {"extra_body": {"reasoning": {"enabled": True}}}
-
-
 async def ask_reasoning(prompt: str, thinking: bool = False) -> str:
-    """DeepSeek-V4-Flash via OpenRouter. Default non-thinking; thinking on hard cases."""
+    """Reasoning model via exo cluster (local, no per-call cost).
+
+    `thinking` is a no-op for the current Llama-70B substitute (no thinking-toggle
+    capability); it is preserved in the signature so callers stay compatible when
+    we swap in a thinking-capable model (e.g. DeepSeek-V4-Flash, Qwen3-Next-Thinking)
+    once cluster RAM allows.
+    """
     last_exc: Exception | None = None
     for attempt in range(3):
         if attempt > 0:
             await asyncio.sleep(2 ** attempt)
         try:
-            resp = await openrouter_client.chat.completions.create(
+            resp = await exo_client.chat.completions.create(
                 model=REASONING_MODEL,
                 messages=[
                     {"role": "system", "content": f"You are a deep strategic reasoner. Apply multi-step analysis, challenge assumptions, and produce well-structured, actionable conclusions. {SYSTEM_CONTEXT}"},
@@ -129,24 +137,14 @@ async def ask_reasoning(prompt: str, thinking: bool = False) -> str:
                 ],
                 max_tokens=1024,
                 temperature=0.4,
-                **_reasoning_extra(thinking),
+                timeout=600,
             )
             content = (resp.choices[0].message.content or "").strip()
             if content:
                 return content
-            resp2 = await openrouter_client.chat.completions.create(
-                model=REASONING_MODEL,
-                messages=[{"role": "user", "content": f"{SYSTEM_CONTEXT}\n\n{prompt}"}],
-                max_tokens=1024,
-                temperature=0.4,
-                **_reasoning_extra(thinking),
-            )
-            return (resp2.choices[0].message.content or "").strip()
-        except openai.APIStatusError as exc:
+        except Exception as exc:
             last_exc = exc
-            if exc.status_code != 503:
-                raise
-    raise last_exc or RuntimeError("DeepSeek reasoning failed after retries")
+    raise last_exc or RuntimeError("exo reasoning failed after retries")
 
 
 # ── Consensus synthesizer ──────────────────────────────────────────────────────
@@ -184,19 +182,17 @@ FINAL RECOMMENDATION:
         if attempt > 0:
             await asyncio.sleep(2 ** attempt)
         try:
-            resp = await openrouter_client.chat.completions.create(
+            resp = await exo_client.chat.completions.create(
                 model=REASONING_MODEL,
                 messages=[{"role": "user", "content": synthesis_prompt}],
                 max_tokens=2048,
                 temperature=0.3,
-                **_reasoning_extra(thinking=True),
+                timeout=600,
             )
             return (resp.choices[0].message.content or "").strip()
-        except openai.APIStatusError as exc:
+        except Exception as exc:
             last_exc = exc
-            if exc.status_code != 503:
-                raise
-    raise last_exc or RuntimeError("DeepSeek synthesis failed after retries")
+    raise last_exc or RuntimeError("exo synthesis failed after retries")
 
 
 # ── Pretty printer ─────────────────────────────────────────────────────────────
@@ -234,7 +230,7 @@ async def run_consensus(question: str):
         text, label = local_result
         panel[f"LOCAL ({label})"] = text
 
-    for name, result in [("XAI ANALYTICAL (Grok-3)", results[1]), ("DEEPSEEK REASONING", results[2])]:
+    for name, result in [("XAI ANALYTICAL (Grok-3)", results[1]), (f"EXO REASONING ({REASONING_MODEL})", results[2])]:
         if isinstance(result, Exception):
             panel[name] = f"[ERROR: {result}]"
         else:
@@ -244,7 +240,7 @@ async def run_consensus(question: str):
         print_panel(name, text)
 
     print(f"\n{DIVIDER}")
-    print("  SYNTHESIZING... (DeepSeek-V4-Flash, thinking mode)")
+    print(f"  SYNTHESIZING... ({REASONING_MODEL} via exo cluster)")
     print(DIVIDER)
 
     verdict = await synthesize(question, panel)

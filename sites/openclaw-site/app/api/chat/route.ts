@@ -24,24 +24,21 @@ async function chatXAI(messages: object[]): Promise<string> {
   return d.choices[0].message.content
 }
 
-async function chatReasoning(messages: object[]): Promise<string> {
-  const apiKey = process.env.OPENROUTER_API_KEY
-  if (!apiKey) throw new Error('OPENROUTER_API_KEY not set')
-  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+async function chatExo(messages: object[]): Promise<string> {
+  // Local exo cluster (master coordinator at :52415, worker hosts MLX inference).
+  // Single unified OpenAI-compatible endpoint. No API key required.
+  const baseUrl = process.env.EXO_URL || 'http://127.0.0.1:52415/v1'
+  const model = process.env.EXO_MODEL || 'mlx-community/Llama-3.3-70B-Instruct-4bit'
+  const r = await fetch(`${baseUrl}/chat/completions`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-      'HTTP-Referer': 'https://openclaw.evrnew.com',
-      'X-Title': 'OpenClaw Site',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'deepseek/deepseek-v4-flash',
+      model,
       max_tokens: 500,
       messages: [{ role: 'system', content: SYSTEM }, ...messages],
     }),
   })
-  if (!r.ok) throw new Error(`OpenRouter ${r.status}`)
+  if (!r.ok) throw new Error(`exo ${r.status}`)
   const d = await r.json()
   return d.choices[0].message.content
 }
@@ -49,13 +46,13 @@ async function chatReasoning(messages: object[]): Promise<string> {
 export async function POST(req: NextRequest) {
   const { messages } = await req.json()
 
-  // Grok-3 primary — DeepSeek-V4-Flash fallback if xAI is down
+  // Grok-3 primary, local exo cluster fallback (Llama-70B-4bit on worker via TB5 RDMA).
   try {
     const reply = await chatXAI(messages)
     return NextResponse.json({ reply })
   } catch {
     try {
-      const reply = await chatReasoning(messages)
+      const reply = await chatExo(messages)
       return NextResponse.json({ reply })
     } catch (err) {
       return NextResponse.json({ error: String(err) }, { status: 500 })

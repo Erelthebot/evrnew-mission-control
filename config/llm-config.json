@@ -18,11 +18,12 @@
   },
 
   "overflow": {
-    "port": 52416,
-    "proxy_port": 52415,
-    "model": "Llama-3.3-70B-Instruct-4bit",
-    "backend": "mlx_lm.server",
-    "note": "Cheap bulk work, fast fallback. Cluster proxy on :52415 round-robins master + worker."
+    "provider": "exo",
+    "port": 52415,
+    "base_url": "http://127.0.0.1:52415/v1",
+    "model": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+    "backend": "exo cluster (master coordinator + worker inference, RDMA over TB5)",
+    "note": "Local Llama-70B-4bit served by exo cluster. Worker hosts the model (48GB RAM); master is coordinator+API at :52415. Single unified endpoint."
   },
 
   "fast": {
@@ -35,30 +36,28 @@
   },
 
   "reasoning": {
-    "provider": "openrouter",
-    "env_key": "OPENROUTER_API_KEY",
-    "base_url": "https://openrouter.ai/api/v1",
-    "model": "deepseek/deepseek-v4-flash",
-    "default_mode": "non-thinking",
-    "thinking_mode": "thinking",
-    "purpose": "Consensus synthesis, strategic analysis, complex reasoning, long-context",
-    "temperature": 0.4
+    "provider": "exo",
+    "port": 52415,
+    "base_url": "http://127.0.0.1:52415/v1",
+    "model": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+    "purpose": "Consensus synthesis, strategic analysis, complex reasoning. DeepSeek-V4-Flash MLX (148GB) does not fit current 96GB pooled RAM; Llama-3.3-70B-4bit is the in-cluster substitute until a 3rd 48GB node is added or Xcode is installed on master to unlock pooled mode.",
+    "temperature": 0.4,
+    "deferred": "DeepSeek-V4-Flash MLX (mlx-community/DeepSeek-V4-Flash, 148GB 8-bit) — load once cluster has >=152GB pooled VRAM."
   },
 
   "hub": {
-    "provider": "openrouter",
-    "env_key": "OPENROUTER_API_KEY",
-    "base_url": "https://openrouter.ai/api/v1",
-    "model": "deepseek/deepseek-v4-flash",
+    "provider": "exo",
+    "base_url": "http://127.0.0.1:52415/v1",
+    "model": "mlx-community/Llama-3.3-70B-Instruct-4bit",
     "purpose": "Hub routing, agent orchestration decisions",
-    "fallback": "overflow"
+    "fallback": "fast"
   },
 
   "consensus_engine": {
     "script": "~/evrnew-marketing/consensus.py",
-    "panel": ["local", "fast (analytical, temp=0.2)", "reasoning (temp=0.4)"],
+    "panel": ["local (Holo3 vision)", "fast (Grok-3 analytical, temp=0.2)", "reasoning (Llama-70B-4bit via exo, temp=0.4)"],
     "synthesizer": "reasoning",
-    "note": "Required for ALL strategic recommendations and advertising investment decisions"
+    "note": "Required for ALL strategic recommendations and advertising investment decisions. Reasoning + synthesizer run locally on exo cluster (no per-call OpenRouter cost)."
   },
 
   "image": {
