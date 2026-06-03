@@ -1,0 +1,19 @@
+{
+  "backend": "jaccl",
+  "envs": [
+    "MLX_METAL_FAST_SYNCH=1",
+    "DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer"
+  ],
+  "hosts": [
+    {
+      "ssh": "127.0.0.1",
+      "ips": ["192.168.100.1"],
+      "rdma": [null, "rdma_en1"]
+    },
+    {
+      "ssh": "erel_worker",
+      "ips": ["192.168.100.2"],
+      "rdma": ["rdma_en1", null]
+    }
+  ]
+}
