@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.erel.tb5-en1</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/sbin/ifconfig</string>
+    <string>en1</string>
+    <string>inet</string>
+    <string>192.168.100.2</string>
+    <string>netmask</string>
+    <string>255.255.255.252</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+</dict>
+</plist>

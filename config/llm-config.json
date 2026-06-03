@@ -1,0 +1,79 @@
+{
+  "_comment": "Single source of truth for LLM routing. Run scripts/update-llm-config.sh after editing to propagate changes.",
+  "updated": "2026-05-18",
+
+  "local": {
+    "port": 8080,
+    "model_file": "Holo3-35B-A3B.Q4_K_M.gguf",
+    "model_id": "Holo3-35B-A3B",
+    "arch": "qwen3moe",
+    "size_gb": 21.3,
+    "ctx_tokens": 65536,
+    "gpu_layers": 99,
+    "threads": 8,
+    "parallel": 1,
+    "binary": "~/llama.cpp/build/bin/llama-server",
+    "branch": "experiment/asymmetric-kv",
+    "note": "Screen/GUI agent work — vision, UI grounding, computer-use trajectories."
+  },
+
+  "overflow": {
+    "provider": "exo",
+    "port": 52415,
+    "base_url": "http://127.0.0.1:52415/v1",
+    "model": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+    "backend": "exo cluster (master coordinator + worker inference, RDMA over TB5)",
+    "note": "Local Llama-70B-4bit served by exo cluster. Worker hosts the model (48GB RAM); master is coordinator+API at :52415. Single unified endpoint."
+  },
+
+  "fast": {
+    "provider": "xai",
+    "env_key": "XAI_API_KEY",
+    "base_url": "https://api.x.ai/v1",
+    "model": "grok-3",
+    "purpose": "Primary chat, copywriting, function calling, ads analysis, monitoring",
+    "temperature": 0.7
+  },
+
+  "reasoning": {
+    "provider": "exo",
+    "port": 52415,
+    "base_url": "http://127.0.0.1:52415/v1",
+    "model": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+    "purpose": "Consensus synthesis, strategic analysis, complex reasoning. DeepSeek-V4-Flash MLX (148GB) does not fit current 96GB pooled RAM; Llama-3.3-70B-4bit is the in-cluster substitute until a 3rd 48GB node is added or Xcode is installed on master to unlock pooled mode.",
+    "temperature": 0.4,
+    "deferred": "DeepSeek-V4-Flash MLX (mlx-community/DeepSeek-V4-Flash, 148GB 8-bit) — load once cluster has >=152GB pooled VRAM."
+  },
+
+  "hub": {
+    "provider": "exo",
+    "base_url": "http://127.0.0.1:52415/v1",
+    "model": "mlx-community/Llama-3.3-70B-Instruct-4bit",
+    "purpose": "Hub routing, agent orchestration decisions",
+    "fallback": "fast"
+  },
+
+  "consensus_engine": {
+    "script": "~/evrnew-marketing/consensus.py",
+    "panel": ["local (Holo3 vision)", "fast (Grok-3 analytical, temp=0.2)", "reasoning (Llama-70B-4bit via exo, temp=0.4)"],
+    "synthesizer": "reasoning",
+    "note": "Required for ALL strategic recommendations and advertising investment decisions. Reasoning + synthesizer run locally on exo cluster (no per-call OpenRouter cost)."
+  },
+
+  "image": {
+    "provider": "gemini",
+    "env_key": "GEMINI_API_KEY",
+    "model": "gemini-3.1-flash-image-preview",
+    "purpose": "Marketing image generation only (not text/reasoning)",
+    "note": "Only route still on Gemini; all text uses fast/reasoning/local/overflow."
+  },
+
+  "embeddings": {
+    "provider": "ollama",
+    "port": 11435,
+    "model": "nomic-embed-text",
+    "purpose": "RAG / memory embeddings only"
+  },
+
+  "disconnected": ["anthropic", "claude"]
+}
