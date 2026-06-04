@@ -33,6 +33,14 @@ interface Service {
   latencyMs?: number; detail?: string
 }
 
+const ENVIRONMENT_FACTS = [
+  { label: 'OS', value: 'darwin 25.5.0' },
+  { label: 'Shell', value: 'zsh' },
+  { label: 'Workspace', value: '/Users/erel_master/evrnew-marketing' },
+  { label: 'Git Repo', value: '/Users/erel_master/evrnew-marketing' },
+  { label: 'Date Context', value: 'Wednesday Jun 3, 2026' },
+]
+
 // ── Colors ────────────────────────────────────────────────────────────────────
 const C = {
   bg:      '#f8fafc',
@@ -275,6 +283,32 @@ export default function MissionControl() {
         </div>
       </div>
 
+      {/* ── Runtime Environment ── */}
+      <div className="mc-card">
+        <SectionTitle>Runtime Environment</SectionTitle>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 8 }}>
+          {ENVIRONMENT_FACTS.map((item) => (
+            <div
+              key={item.label}
+              style={{
+                border: `1px solid ${C.border}`,
+                borderRadius: 6,
+                padding: '8px 10px',
+                background: '#f8fafc',
+                minWidth: 0,
+              }}
+            >
+              <div style={{ fontSize: 8, letterSpacing: '0.12em', textTransform: 'uppercase', color: C.muted, marginBottom: 3 }}>
+                {item.label}
+              </div>
+              <div style={{ fontSize: 10, color: C.text, fontFamily: 'SF Mono, Fira Code, Menlo, monospace', wordBreak: 'break-all' }}>
+                {item.value}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ── Stat Cards ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
         <StatCard
@@ -432,7 +466,9 @@ export default function MissionControl() {
             <span style={{ fontSize: 9, padding: '2px 8px', borderRadius: 8, background: '#f0fdf4', border: `1px solid #bbf7d0`, color: C.green, fontWeight: 600, letterSpacing: '0.06em' }}>
               ANE PRESENT
             </span>
-            <span style={{ fontSize: 9, color: C.muted }}>Apple M4 Pro · Metal4</span>
+            <span style={{ fontSize: 9, color: C.muted }}>
+              {sysMetrics?.gpu?.model ? `${sysMetrics.gpu.model} · Metal` : 'Apple Silicon · Metal'}
+            </span>
           </div>
           {gpuHistory.length > 1 ? (
             <ResponsiveContainer width="100%" height={200}>

@@ -203,7 +203,7 @@ export default function OperationsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-[10px] tracking-[3px] uppercase font-bold mb-1" style={{ color: '#0077b6' }}>Agent Fleet</h1>
-          <p className="text-xs" style={{ color: '#64748b' }}>13 autonomous marketing agents running on erel-masters-macbook-pro.local</p>
+          <p className="text-xs" style={{ color: '#64748b' }}>13 autonomous marketing agents running on ErelMastersMBP</p>
         </div>
         <div className="flex items-center gap-2 rounded-full px-3 py-1.5 border-2" style={{ background: '#f0fdf4', borderColor: '#16a34a' }}>
           <span className="w-2 h-2 rounded-full inline-block animate-pulse" style={{ background: '#16a34a' }} />

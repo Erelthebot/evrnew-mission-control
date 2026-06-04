@@ -33,7 +33,7 @@ export default function TopBar() {
         </span>
         <span style={{ color: '#e2e8f0', fontSize: 10 }}>|</span>
         <span style={{ fontSize: 10, color: '#94a3b8' }}>
-          EREL.AI · Evrnew LLC · MacBook Pro M5 Pro
+          EREL.AI · Evrnew LLC · darwin 25.5.0 · zsh
         </span>
       </div>
 
