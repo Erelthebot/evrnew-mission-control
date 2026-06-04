@@ -1,5 +1,9 @@
 export const dynamic = 'force-dynamic'
 
+import { readFile } from 'node:fs/promises'
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+
 interface Svc {
   name: string
   key: string
@@ -7,6 +11,35 @@ interface Svc {
   status: 'ok' | 'configured' | 'down' | 'unknown'
   latencyMs?: number
   detail?: string
+}
+
+let cachedOpenClawToken: string | null | undefined
+
+async function resolveTelegramToken(): Promise<string | null> {
+  if (process.env.TELEGRAM_BOT_TOKEN) return process.env.TELEGRAM_BOT_TOKEN
+  if (cachedOpenClawToken !== undefined) return cachedOpenClawToken
+
+  const configPaths = [
+    process.env.OPENCLAW_CONFIG_PATH,
+    join(homedir(), '.openclaw', 'openclaw.json'),
+  ].filter((p): p is string => Boolean(p))
+
+  for (const configPath of configPaths) {
+    try {
+      const raw = await readFile(configPath, 'utf8')
+      const parsed = JSON.parse(raw)
+      const token = parsed?.channels?.telegram?.botToken
+      if (typeof token === 'string' && token.trim()) {
+        cachedOpenClawToken = token.trim()
+        return cachedOpenClawToken
+      }
+    } catch {
+      // Best-effort local fallback; keep "unknown" when config is inaccessible.
+    }
+  }
+
+  cachedOpenClawToken = null
+  return null
 }
 
 async function pingUrl(name: string, key: string, category: string, url: string, opts?: RequestInit): Promise<Svc> {
@@ -45,7 +78,7 @@ async function pingDataForSEO(): Promise<Svc> {
 }
 
 async function pingTelegram(): Promise<Svc> {
-  const token = process.env.TELEGRAM_BOT_TOKEN
+  const token = await resolveTelegramToken()
   if (!token) return { name: 'Telegram Bot', key: 'telegram', category: 'comm', status: 'unknown' }
   const t0 = Date.now()
   try {
