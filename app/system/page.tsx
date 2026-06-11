@@ -79,12 +79,12 @@ export default function SystemPage() {
               </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-              <Stat label="Hostname" value="erel-masters-macbook-pro.local" />
-              <Stat label="Hardware" value="MacBook Pro M5 Pro" />
-              <Stat label="CPU" value="18-core M5 Pro" />
-              <Stat label="RAM" value="48 GB unified" />
-              <Stat label="Storage" value="1 TB SSD" />
-              <Stat label="OS" value="macOS 26.3.1" />
+              <Stat label="Hostname" value="ErelMastersMBP" />
+              <Stat label="OS" value="darwin 25.5.0" />
+              <Stat label="Shell" value="zsh" />
+              <Stat label="Workspace" value="/Users/erel_master/evrnew-marketing" />
+              <Stat label="Git Repo" value="/Users/erel_master/evrnew-marketing" />
+              <Stat label="Date" value="Wednesday Jun 3, 2026" />
             </div>
           </div>
           <div className="sm:w-64 space-y-2 text-xs">

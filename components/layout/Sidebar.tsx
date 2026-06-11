@@ -128,7 +128,7 @@ export default function Sidebar() {
             <span style={{ fontSize: 10, color: '#334155', fontWeight: 600 }}>erel.local</span>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <span style={{ fontSize: 9, color: '#94a3b8' }}>Mac Mini M4 Pro · macOS 15</span>
+            <span style={{ fontSize: 9, color: '#94a3b8' }}>darwin 25.5.0 · zsh</span>
             <span style={{ fontSize: 9, color: '#94a3b8' }}>erel@evrnew.com</span>
           </div>
           <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: 6 }}>
